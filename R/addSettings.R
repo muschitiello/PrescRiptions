@@ -83,3 +83,4 @@ addSettings <- function(dir = "."){
 
   message(sprintf("[SUCCESS] Settings files prepared"))
 }
+
