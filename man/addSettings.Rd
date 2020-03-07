@@ -2,18 +2,12 @@
 % Please edit documentation in R/addSettings.R
 \name{addSettings}
 \alias{addSettings}
-\title{Add settings file to project}
+\title{addSettings}
 \usage{
-addSettings(dir = ".", filename = "pesi.yml", gitignore = TRUE, fields = NULL)
+addSettings(dir = ".")
 }
 \arguments{
 \item{dir}{character. Directory in which to write settings files}
-
-\item{filename}{character. Name of settings file to write}
-
-\item{gitignore}{logical. Should this file be added to the .gitignore?}
-
-\item{fields}{list. Manually specify the structure of the settings file}
 }
 \description{
 Creates a sample settings file, by default (leading dashes for
@@ -21,29 +15,8 @@ Creates a sample settings file, by default (leading dashes for
 
 year: [year] \cr
 month: [month] \cr
-jarfolder: "D:/Documents/DriversCertificates" \cr
-personeFisiche: FALSE  \cr
-stkv: \cr
--- server: "mydwpr02.intra.infocamere.it" \cr
--- port: "3306" \cr
--- schema: "stkv" \cr
--- user: "[your_user]" \cr
--- pw: "[your_password]" \cr
-aSoci: \cr
--- server: "mydwpr01.intra.infocamere.it" \cr
--- port: "3306" \cr
--- schema: "infm" \cr
--- user: "[your_user]" \cr
--- pw: "[your_password]" \cr
-oracle: \cr
--- server: "oraricl.intra.infocamere.it" \cr
--- schema: "batchri.WORLD" \cr
--- user: "[your_user]" \cr
--- pw: "[your_password]" \cr
-dvsu: \cr
--- server: "mydwpr01.intra.infocamere.it" \cr
--- port: "3306" \cr
--- schema: "dvsu" \cr
--- user: "[your_user]" \cr
--- pw: "[your_password]" \cr
+basedir: [working directory] \cr
+}
+\details{
+Add settings file to project
 }

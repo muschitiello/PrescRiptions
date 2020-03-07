@@ -1,0 +1,26 @@
+year: 2019
+month: 11
+jarfolder: "D:/Documents/DriversCertificates"
+stkv:
+  server: "mydwpr02.intra.infocamere.it"
+  port: "3306"
+  schema: "stkv"
+  user: "stkvnet"
+  pw: "tcxsn624"
+aSoci: 
+  server: "mydwpr01.intra.infocamere.it"
+  port: "3306"
+  schema: "infm"
+  user: "infmjdbc"
+  pw: "Sc6gE7bLi3rvqLMg"
+oracle: 
+  server: "oraricl.intra.infocamere.it"
+  schema: "batchri.WORLD"
+  user: "aedanet"
+  pw: "vTO3Fcs6R9VgLqFq"
+dvsu: 
+  server: "mydwpr01.intra.infocamere.it"
+  port: "3306"
+  schema: "dvsu"
+  user: "dvsunet"
+  pw: "dau1hVTt3trqQNM6"
