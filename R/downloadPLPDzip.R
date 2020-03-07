@@ -1,19 +1,31 @@
 ##' downloadPLPDzip
 ##'
-##' Download monthly plpd zip file for years 2018, 2019 and extract them on a specified folder
+##' Download monthly plpd zip file for years 2018, 2019 in csv or feather format
+##' and extract them on a specified folder.
 ##'
-##' @param yyyy numerical 4 digit year
-##' @param mm numerical 2 digit month
-##' @param basedir working directory
+##' @param yyyy numerical 4 digit year, default = 2019
+##' @param mm numerical 2 digit month, no default
+##' @param basedir working directory, no default
+##' @param outFormat desired output format. One of "csv" or "feather", default = "feather"
 ##'
 ##' @export
 ##'
 
 
-downloadPLPDzip = function(yyyy = 2019, mm = 12,basedir = "D:/Progetti/2020_erum2020/" ){
+downloadPLPDzip = function(yyyy = 2019, mm = NULL ,basedir = NULL, outFormat = "feather"){
 
   plpdurl = paste0("plpd",yyyy,mm)
-  exDir = paste0(basedir,"/dataInput/01_plpd/csv/plpd_",yyyy,"_",mm)
+  prefix = paste0(yyyy,mm)
+  folder = paste0("plpd_",prefix)
+  exDir = paste0(basedir,"dataInput/01_plpd/")
+  csvDir = paste0(basedir,"dataInput/01_plpd/csv/")
+  featherDir = paste0(basedir,"dataInput/01_plpd/feather/")
+
+  if (outFormat == "csv"){
+    outDir = csvDir
+  }else{
+    outDir = featherDir
+  }
 
   # Data URL
   plpd201801 = "https://files.digital.nhs.uk/11/1E8A59/2018_01_Jan.zip"
@@ -45,9 +57,44 @@ downloadPLPDzip = function(yyyy = 2019, mm = 12,basedir = "D:/Progetti/2020_erum
   tf = tempfile(fileext = ".zip")
   # download into the placeholder file
   download.file(url = get(plpdurl), destfile = tf)
-  # unzip
-  unzip(zipfile = tf, exdir = exDir)
+  # unzip in temporary folder
+  td = tempdir()
+
+  unzip(zipfile = tf, exdir = td)
+
+  plpdFiles = list.files(td)[which(grepl("ADDR|CHEM|PDPI",list.files(td)))]
+
+  # create folder
+    if(!dir.exists(paste0(outDir,folder))){
+      dir.create(outDir)
+      dir.create(paste0(outDir,folder))
+    }
+
+
+  # save file in the specified format
+  for(i in plpdFiles){
+    if(grepl("ADDR",i)){
+      data = read.csv(paste0(td,"/",i))
+      path = paste0(outDir,folder,"/",prefix,"_addr.",outFormat)
+    }
+    if(grepl("CHEM",i)){
+      data = read.csv(paste0(td,"/",i))
+      path = paste0(outDir,folder,"/",prefix,"_chem.",outFormat)
+    }
+    if(grepl("PDPI",i)){
+      data = read.csv(paste0(td,"/",i))
+      path = paste0(outDir,folder,"/",prefix,"_pdpi.",outFormat)
+    }
+
+    if(outFormat == "csv"){
+      write.csv2(data,path,row.names = FALSE)
+    }else{
+      write_feather(data,path)
+    }
+  }
+
   # rm tmp file
   unlink(tf)
+  unlink(td)
 
 }

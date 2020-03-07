@@ -4,15 +4,18 @@
 \alias{downloadPLPDzip}
 \title{downloadPLPDzip}
 \usage{
-downloadPLPDzip(yyyy = 2019, mm = 12, basedir = "D:/Progetti/2020_erum2020/")
+downloadPLPDzip(yyyy = 2019, mm = NULL, basedir = NULL, outFormat = "feather")
 }
 \arguments{
-\item{yyyy}{numerical 4 digit year}
+\item{yyyy}{numerical 4 digit year, default = 2019}
 
-\item{mm}{numerical 2 digit month}
+\item{mm}{numerical 2 digit month, no default}
 
-\item{basedir}{working directory}
+\item{basedir}{working directory, no default}
+
+\item{outFormat}{desired output format. One of "csv" or "feather", default = "feather"}
 }
 \description{
-Download monthly plpd zip file for years 2018, 2019 and extract them on a specified folder
+Download monthly plpd zip file for years 2018, 2019 in csv or feather format
+and extract them on a specified folder.
 }
