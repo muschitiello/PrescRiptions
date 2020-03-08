@@ -6,13 +6,20 @@
 ##' @param yyyy numerical 4 digit year, default = 2019
 ##' @param mm numerical 2 digit month, no default
 ##' @param basedir working directory, no default
-##' @param outFormat desired output format. One of "csv" or "feather", default = "feather"
+##' @param outFormat desired output format. One of "csv", "feather" or "both", default = "feather"
+##'
+##' @details The function is used to download Practice Level PRescriprion data foor
+##' years 2018 and 2019. Links for the download are specifyed internally.
+##' The function checks if the file already exists and in that case, does NOT download it.
+##' FIle are in csv format. Feather format can be chosen. In that case the csv file is converted and then removed, so to
+##' save internal space. If "both" \emph{outFotmat} is selected, csv is kept and the feather is generated.
 ##'
 ##' @export
 ##'
 
 
 downloadPLPDzip = function(yyyy = 2019, mm = NULL ,basedir = NULL, outFormat = "feather"){
+  mm=as.character(stringr::str_pad(mm,width = 2,side = "left",pad = "0"))
 
   plpdurl = paste0("plpd",yyyy,mm)
   prefix = paste0(yyyy,mm)
@@ -23,8 +30,11 @@ downloadPLPDzip = function(yyyy = 2019, mm = NULL ,basedir = NULL, outFormat = "
 
   if (outFormat == "csv"){
     outDir = csvDir
-  }else{
+  }else if(outFormat == "feather"){
     outDir = featherDir
+  } else {
+    outDir = c(csvDir,featherDir)
+    outFormat = c("csv","feather")
   }
 
   # Data URL
@@ -55,46 +65,62 @@ downloadPLPDzip = function(yyyy = 2019, mm = NULL ,basedir = NULL, outFormat = "
 
   # create the temporary file
   tf = tempfile(fileext = ".zip")
-  # download into the placeholder file
-  download.file(url = get(plpdurl), destfile = tf)
-  # unzip in temporary folder
-  td = tempdir()
 
-  unzip(zipfile = tf, exdir = td)
+  # check if file already exists
+  # if not, create folder
+  for (i in outDir){
 
-  plpdFiles = list.files(td)[which(grepl("ADDR|CHEM|PDPI",list.files(td)))]
+    outF = ifelse(i == csvDir,"csv","feather")
 
-  # create folder
-    if(!dir.exists(paste0(outDir,folder))){
-      dir.create(outDir)
-      dir.create(paste0(outDir,folder))
-    }
+    if(dir.exists(paste0(i,folder)) & length(list.files(paste0(i,folder)))==3){
+        message(paste0("File already downloaded for the selected year, month and format"))
+        message(paste0("in the ",i," folder"))
+      }else{
+        suppressWarnings(dir.create(i))
+        suppressWarnings(dir.create(paste0(i,folder)))
 
+      # check if a csv already exists (valid only for the feather case)
+      if(i == featherDir & dir.exists(paste0(csvDir,folder))&length(list.files(paste0(csvDir,folder)))==3){
+        td = paste0(csvDir,folder,"/")
+      }else{
+        # if not, download into the placeholder file
+        utils::download.file(url = get(plpdurl), destfile = tf)
+        # unzip in temporary folder
+        td = tempdir()
+        unzip(zipfile = tf, exdir = td)
+      }
+      plpdFiles = list.files(td)[which(grepl("ADDR|CHEM|PDPI|addr|chem|pdpi",list.files(td)))]
 
-  # save file in the specified format
-  for(i in plpdFiles){
-    if(grepl("ADDR",i)){
-      data = read.csv(paste0(td,"/",i))
-      path = paste0(outDir,folder,"/",prefix,"_addr.",outFormat)
-    }
-    if(grepl("CHEM",i)){
-      data = read.csv(paste0(td,"/",i))
-      path = paste0(outDir,folder,"/",prefix,"_chem.",outFormat)
-    }
-    if(grepl("PDPI",i)){
-      data = read.csv(paste0(td,"/",i))
-      path = paste0(outDir,folder,"/",prefix,"_pdpi.",outFormat)
-    }
+      # save file in the specified format
+      for(j in plpdFiles){
+        if(grepl("ADDR|addr",j)){
+          data = read.csv2(paste0(td,"/",j))
+          path = paste0(i,folder,"/",prefix,"_addr.",outF)
+        }
+        if(grepl("CHEM|chem",j)){
+          data = read.csv2(paste0(td,"/",j))
+          path = paste0(i,folder,"/",prefix,"_chem.",outF)
+        }
+        if(grepl("PDPI|pdpi",j)){
+          data = read.csv2(paste0(td,"/",j))
+          path = paste0(i,folder,"/",prefix,"_pdpi.",outF)
+        }
 
-    if(outFormat == "csv"){
-      write.csv2(data,path,row.names = FALSE)
-    }else{
-      write_feather(data,path)
+        if(i == csvDir){
+          write.csv2(data,path,row.names = FALSE)
+        }else{
+          feather::write_feather(data,path)
+        }
+      }
+
+      # rm tmp file
+      if(td == paste0(csvDir,folder,"/")){
+        unlink(tf)
+      }else{
+        unlink(tf)
+        unlink(td)
+      }
+
     }
   }
-
-  # rm tmp file
-  unlink(tf)
-  unlink(td)
-
 }

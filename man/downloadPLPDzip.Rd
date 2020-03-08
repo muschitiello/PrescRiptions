@@ -13,9 +13,16 @@ downloadPLPDzip(yyyy = 2019, mm = NULL, basedir = NULL, outFormat = "feather")
 
 \item{basedir}{working directory, no default}
 
-\item{outFormat}{desired output format. One of "csv" or "feather", default = "feather"}
+\item{outFormat}{desired output format. One of "csv", "feather" or "both", default = "feather"}
 }
 \description{
 Download monthly plpd zip file for years 2018, 2019 in csv or feather format
 and extract them on a specified folder.
+}
+\details{
+The function is used to download Practice Level PRescriprion data foor
+years 2018 and 2019. Links for the download are specifyed internally.
+The function checks if the file already exists and in that case, does NOT download it.
+FIle are in csv format. Feather format can be chosen. In that case the csv file is converted and then removed, so to
+save internal space. If "both" \emph{outFotmat} is selected, csv is kept and the feather is generated.
 }

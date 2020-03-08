@@ -4,11 +4,10 @@
 ##' a script without changing the script itself.#'
 ##'
 ##' @param yamlF character. Path of the settings file.
-##'
-##' @import data.table
+##' @import utils
 ##' @import feather
-##' @importFrom stringr str_pad
-##' @import yaml
+##' @import data.table
+##' @import stringr
 ##'
 ##' @export
 

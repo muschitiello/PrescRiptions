@@ -11,7 +11,6 @@
 #'
 #' @param dir character. Directory in which to write settings files
 #'
-#' @import yaml
 #' @export
 
 addSettings <- function(dir = "."){
@@ -27,7 +26,7 @@ addSettings <- function(dir = "."){
 
   # Overwrite the basic with a new one if it is provided
   if(!is.null(fields)){
-    yaml_list <- as.yaml(fields)
+    yaml_list <- yaml::as.yaml(fields)
   }
 
   examplefile <- paste0(file, ".example")

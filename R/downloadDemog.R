@@ -6,13 +6,14 @@
 ##' @param yyyy numerical 4 digit year, default = 2019
 ##' @param mm numerical 2 digit month, no default
 ##' @param basedir working directory, no default
-##' @param outFormat desired output format. One of "csv" or "feather", default = "feather"
+##' @param outFormat desired output format. One of "csv", "feather" or "both", default = "feather"
 ##'
 ##' @export
 ##'
 
 
 downloadDemog = function(yyyy = 2019, mm = NULL ,basedir = NULL, outFormat = "feather"){
+  mm=as.character(stringr::str_pad(mm,width = 2,side = "left",pad = "0"))
 
   url1 = paste0("demog",yyyy,mm)
   url2 = paste0("demogMap",yyyy,mm)
@@ -24,8 +25,11 @@ downloadDemog = function(yyyy = 2019, mm = NULL ,basedir = NULL, outFormat = "fe
 
   if (outFormat == "csv"){
     outDir = csvDir
-  }else{
+  }else if(outFormat == "feather"){
     outDir = featherDir
+  } else {
+    outDir = c(csvDir,featherDir)
+    outFormat = c("csv","feather")
   }
 
   # Data URL
@@ -79,37 +83,57 @@ downloadDemog = function(yyyy = 2019, mm = NULL ,basedir = NULL, outFormat = "fe
   demogMap201912 = "https://files.digital.nhs.uk/F4/FCE14C/gp-reg-pat-prac-map.csv"
 
   # create the temporary file
-  td1 = tempfile(fileext = ".csv")
-  td2 = tempfile(fileext = ".csv")
-  # download into the placeholder file
-  download.file(url = get(url1), destfile = td1)
-  download.file(url = get(url2), destfile = td2)
-
-  # create folder
-    if(!dir.exists(paste0(outDir,folder))){
-      dir.create(outDir)
-      dir.create(paste0(outDir,folder))
-    }
 
 
-  # save file in the specified format
+  # check if file already exists
+  # if not, create folder
+  for (i in outDir){
+
+    outF = ifelse(i == csvDir,"csv","feather")
+
+    if(dir.exists(paste0(i,folder)) & length(list.files(paste0(i,folder)))==2){
+      message(paste0("File already downloaded for the selected year, month and format"))
+      message(paste0("in the ",i," folder"))
+    }else{
+      suppressWarnings(dir.create(i))
+      suppressWarnings(dir.create(paste0(i,folder)))
+
+      # check if a csv already exists (valid only for the feather case)
+      if(i == featherDir & dir.exists(paste0(csvDir,folder))&length(list.files(paste0(csvDir,folder)))==2){
+        td1 = paste0(csvDir,folder,"/",prefix,"_demog.",outF)
+        td2 = paste0(csvDir,folder,"/",prefix,"_demogMap.",outF)
+      }else{
+        # if not, download into the placeholder file
+        td1 = tempfile(fileext = ".csv")
+        td2 = tempfile(fileext = ".csv")
+
+        # save file in the specified format
+        # download into the placeholder file
+        utils::download.file(url = get(url1), destfile = td1)
+        utils::download.file(url = get(url2), destfile = td2)
+      }
+      # save file in the specified format
       data1 = read.csv(td1)
-      path1 = paste0(outDir,folder,"/",prefix,"_demog.",outFormat)
+      path1 = paste0(i,folder,"/",prefix,"_demog.",outF)
 
       data2 = read.csv(td2)
-      path2 = paste0(outDir,folder,"/",prefix,"_demogMap.",outFormat)
+      path2 = paste0(i,folder,"/",prefix,"_demogMap.",outF)
+
+      if(i == csvDir){
+        write.csv2(data1,path1,row.names = FALSE)
+        write.csv2(data2,path2,row.names = FALSE)
+      }else{
+        feather::write_feather(data1,path1)
+        feather::write_feather(data2,path2)
+      }
 
 
-    if(outFormat == "csv"){
-      write.csv2(data1,path1,row.names = FALSE)
-      write.csv2(data2,path2,row.names = FALSE)
-    }else{
-      write_feather(data1,path1)
-      write_feather(data2,path2)
+      # rm tmp file
+      if(td1 != paste0(csvDir,folder,"/",prefix,"_demog.",outF)){
+        unlink(td1)
+        unlink(td2)
+      }
     }
-
-  # rm tmp file
-  unlink(td1)
-  unlink(td2)
-
+  }
 }
+

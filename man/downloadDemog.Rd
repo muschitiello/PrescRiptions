@@ -13,7 +13,7 @@ downloadDemog(yyyy = 2019, mm = NULL, basedir = NULL, outFormat = "feather")
 
 \item{basedir}{working directory, no default}
 
-\item{outFormat}{desired output format. One of "csv" or "feather", default = "feather"}
+\item{outFormat}{desired output format. One of "csv", "feather" or "both", default = "feather"}
 }
 \description{
 Download monthly demographic data file for years 2018, 2019 in csv or feather format
