@@ -7,8 +7,8 @@
 ./PrescRiptions.yml.example
 D:/Progetti/2020_erum2020//PrescRiptions.yml
 D:/Progetti/2020_erum2020//PrescRiptions.yml
-^.*\.Rproj$
-^\.Rproj\.user$
-^.*\.yml$
-^.*\.example$
-^.*\main.R$
+.Rproj$
+.Rproj\.user$
+.yml$
+.example$
+.*\main.R$
