@@ -3,4 +3,9 @@
 ^.*\.yml$
 ^.*\.example$
 ^.*\main.R$
-
+.Rhistory
+.Rapp.history
+.RData
+.Ruserdata
+/*.Rcheck
+.Rproj.user
