@@ -13,7 +13,7 @@
 ##' years 2018 and 2019. Links for the download are specifyed internally.
 ##' The function checks if the file already exists and in that case, does NOT download it.
 ##' FIle are in csv format. Feather format can be chosen. In that case the csv file is converted and then removed, so to
-##' save internal space. If "both" \emph{outFotmat} is selected, csv is kept and the feather is generated.
+##' save internal space. If "both" \emph{outFotmat} is slected, csv is kept and the feather is generated.
 ##'
 ##' @export
 ##'
