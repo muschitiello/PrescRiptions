@@ -8,6 +8,7 @@
 ##' @import feather
 ##' @import data.table
 ##' @import stringr
+##' @import readr
 ##'
 ##' @export
 
