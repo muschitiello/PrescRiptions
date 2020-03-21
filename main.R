@@ -1,10 +1,15 @@
 library(PrescRiptions)
 
-# read settings
+# define configuration settings
 
-addSettings()
+settings = setConfig(2018,12,"D:/Progetti/2020_erum2020/")
 
-settings = readSettings("PrescRiptions.yml")
+dataAll = importMonthlyData(mm=settings$month)
+
+for (i in 1:length(dataAll)){
+  assign(names(dataAll)[i],dataAll[[i]])
+}
+
 
 ########################################################
 # #### Test of download functions
@@ -47,11 +52,5 @@ settings = readSettings("PrescRiptions.yml")
 # }
 ########################################################
 
-dataAll = importMonthlyData(mm=12)
-dataAll
-str(dataAll)
 
-for (i in 1:length(dataAll)){
-  assign(names(dataAll)[i],dataAll[[i]])
-}
 

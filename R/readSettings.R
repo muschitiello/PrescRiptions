@@ -4,12 +4,6 @@
 ##' a script without changing the script itself.
 ##'
 ##' @param yamlF character. Path of the settings file.
-##' @import utils
-##' @import feather
-##' @import data.table
-##' @import stringr
-##' @import readr
-##' @importFrom RCurl getURL
 ##' 
 ##' @export
 
