@@ -144,7 +144,7 @@ importMonthlyData = function(yyyy = 2019, mm = NULL){
         }
       assign(sub(".csv","",j),data.table(read.csv(text = RCurl::getURL(paste0(url,inFolderFinal[i],j )),sep = sepCsv)))
       
-      out[[k]] = mget(c(nameF))
+      out[k] = mget(c(nameF))
       names(out)[k] = nameF
       k=k+1
       

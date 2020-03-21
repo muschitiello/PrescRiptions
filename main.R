@@ -19,6 +19,9 @@ for (i in 1:length(dataAll)){
   assign(names(dataAll)[i],dataAll[[i]])
 }
 
+str(dataAll[4])
+rm(i)
+
 # see what you have on Working Space
 
 ls()
