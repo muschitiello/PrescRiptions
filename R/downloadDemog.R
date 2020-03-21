@@ -8,6 +8,9 @@
 ##' @param basedir working directory, no default
 ##' @param outFormat desired output format. One of "csv", "feather" or "both", default = "feather"
 ##'
+##' @seealso \code{\link{importMonthlyData}}, \code{\link{downloadPLPDzip}}, \code{\link{downloadData_Github}}
+##'
+##' @return the function does not return anything, but download the specified files to the basedir folder
 ##' @export
 ##'
 

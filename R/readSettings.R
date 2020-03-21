@@ -1,7 +1,7 @@
 ##' readSettings
 ##'
 ##' A settings file allows a user of the package to make changes to the parameters of
-##' a script without changing the script itself.#'
+##' a script without changing the script itself.
 ##'
 ##' @param yamlF character. Path of the settings file.
 ##' @import utils
@@ -9,7 +9,8 @@
 ##' @import data.table
 ##' @import stringr
 ##' @import readr
-##'
+##' @importFrom RCurl getURL
+##' 
 ##' @export
 
 readSettings <- function(yamlF = NULL){

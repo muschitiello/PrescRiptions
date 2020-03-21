@@ -11,5 +11,5 @@ readSettings(yamlF = NULL)
 }
 \description{
 A settings file allows a user of the package to make changes to the parameters of
-a script without changing the script itself.#'
+a script without changing the script itself.
 }

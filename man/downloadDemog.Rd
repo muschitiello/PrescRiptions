@@ -15,7 +15,13 @@ downloadDemog(yyyy = 2019, mm = NULL, basedir = NULL, outFormat = "feather")
 
 \item{outFormat}{desired output format. One of "csv", "feather" or "both", default = "feather"}
 }
+\value{
+the function does not return anything, but download the specified files to the basedir folder
+}
 \description{
 Download monthly demographic data file for years 2018, 2019 in csv or feather format
 and extract them on a specified folder.
+}
+\seealso{
+\code{\link{importMonthlyData}}, \code{\link{downloadPLPDzip}}, \code{\link{downloadData_Github}}
 }

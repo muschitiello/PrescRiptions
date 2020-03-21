@@ -13,7 +13,10 @@
 ##' The function checks if the file already exists and in that case, does NOT download it.
 ##' FIle are in csv format. Feather format can be chosen. In that case the csv file is converted and then removed, so to
 ##' save internal space. If "both" \emph{outFotmat} is selected, csv is kept and the feather is generated.
-##'
+##' 
+##' @seealso \code{\link{importMonthlyData}}, \code{\link{downloadDemog}}, \code{\link{downloadData_Github}}
+##' 
+##' @return the function does not return anything, but download the specified files to the basedir folder
 ##' @export
 ##'
 
@@ -27,6 +30,7 @@ downloadPLPDzip = function(yyyy = 2019, mm = NULL ,basedir = NULL, outFormat = "
   exDir = paste0(basedir,"dataInput/01_plpd/")
   csvDir = paste0(basedir,"dataInput/01_plpd/csv/")
   featherDir = paste0(basedir,"dataInput/01_plpd/feather/")
+  
 
   if (outFormat == "csv"){
     outDir = csvDir

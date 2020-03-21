@@ -2,6 +2,7 @@ Package: PrescRiptions
 Type: Package
 Title: aggregations and reports on Practice Level Prescription Data in England
 Version: 0.1.0
+Date: 21/03/2020
 Authors@R: c(person("Cristina", "Muschitiello", role = "aut", email =
         "cristina.muschitiello@gmail.com"), person("Cristina", "Muschitiello",
         role = "cre", email = "cristina.muschitiello@gmail.com"))
@@ -9,7 +10,7 @@ Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: GPL
 Depends: R (>= 3.5.0)
-Imports: feather, yaml, data.table, stringr
+Imports: feather, yaml, data.table, stringr, readr, RCurl
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.0.2
