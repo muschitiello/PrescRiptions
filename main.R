@@ -1,8 +1,17 @@
+# Install package from source
+
+# upload package
+
 library(PrescRiptions)
 
-# define configuration settings
+# define working settings
 
-settings = setConfig(2018,12,"D:/Progetti/2020_erum2020/")
+?setConfig
+
+settings = PrescRiptions::setConfig(year = 2018, month = 12, basedir = "D:/Progetti/2020_erum2020/")
+# settings = PrescRiptions::setConfig(year = ... , month = ... , basedir = "...")
+
+# download in WD data for the specified month and year
 
 dataAll = importMonthlyData(mm=settings$month)
 
@@ -10,7 +19,19 @@ for (i in 1:length(dataAll)){
   assign(names(dataAll)[i],dataAll[[i]])
 }
 
+# see what you have on Working Space
 
+ls()
+
+# now work on data
+
+
+
+
+
+
+########################################################
+### Other tests on Import Functions
 ########################################################
 # #### Test of download functions
 # #### !!!! attention: functions that download plpd data require a lot of time because files are very big
