@@ -103,8 +103,8 @@ downloadDemog = function(yyyy = 2019, mm = NULL ,basedir = NULL, outFormat = "fe
 
       # check if a csv already exists (valid only for the feather case)
       if(i == featherDir & dir.exists(paste0(csvDir,folder))&length(list.files(paste0(csvDir,folder)))==2){
-        td1 = paste0(csvDir,folder,"/",prefix,"_demog.",outF)
-        td2 = paste0(csvDir,folder,"/",prefix,"_demogMap.",outF)
+        td1 = paste0(csvDir,folder,"/","demog_",prefix,".",outF)
+        td2 = paste0(csvDir,folder,"/","demogMap_",prefix,".",outF)
       }else{
         # if not, download into the placeholder file
         td1 = tempfile(fileext = ".csv")
@@ -117,10 +117,10 @@ downloadDemog = function(yyyy = 2019, mm = NULL ,basedir = NULL, outFormat = "fe
       }
       # save file in the specified format
       data1 = read.csv(td1)
-      path1 = paste0(i,folder,"/",prefix,"_demog.",outF)
+      path1 = paste0(i,folder,"/","demog_",prefix,".",outF)
 
       data2 = read.csv(td2)
-      path2 = paste0(i,folder,"/",prefix,"_demogMap.",outF)
+      path2 = paste0(i,folder,"/","demogMap_",prefix,".",outF)
 
       if(i == csvDir){
         write.csv2(data1,path1,row.names = FALSE)
@@ -132,7 +132,7 @@ downloadDemog = function(yyyy = 2019, mm = NULL ,basedir = NULL, outFormat = "fe
 
 
       # rm tmp file
-      if(td1 != paste0(csvDir,folder,"/",prefix,"_demog.",outF)){
+      if(td1 != paste0(csvDir,folder,"/","demog_",prefix,".",outF)){
         unlink(td1)
         unlink(td2)
       }

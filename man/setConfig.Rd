@@ -4,14 +4,16 @@
 \alias{setConfig}
 \title{setConfig}
 \usage{
-setConfig(year, month, basedir)
+setConfig(basedir, year, month, region)
 }
 \arguments{
+\item{basedir}{path to an existing working directory}
+
 \item{year}{numeric. Year of interest}
 
 \item{month}{numeric. Month of interest}
 
-\item{basedir}{path to an existing working directory}
+\item{region}{char. Region of analysis}
 }
 \description{
 creates a list of configuration settings that will be used across the package

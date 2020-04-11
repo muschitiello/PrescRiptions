@@ -70,14 +70,14 @@ importMonthlyData = function(yyyy = 2019, mm = NULL){
   
   for(j in plpdFiles){
     if(grepl("ADDR|addr",j)){
-      assign(paste0("addr",prefix),data.table(read.csv(paste0(td,"/",j),stringsAsFactors = NULL)))
+      assign(paste0("addr",prefix),data.table(read.csv(paste0(td,"/",j),stringsAsFactors = FALSE)))
     }
     if(grepl("CHEM|chem",j)){
-      assign(paste0("chem",prefix),data.table(read.csv(paste0(td,"/",j),stringsAsFactors = NULL)))
+      assign(paste0("chem",prefix),data.table(read.csv(paste0(td,"/",j),stringsAsFactors = FALSE)))
       
     }
     if(grepl("PDPI|pdpi",j)){
-      assign(paste0("plpd",prefix),data.table(read.csv(paste0(td,"/",j),stringsAsFactors = NULL)))
+      assign(paste0("plpd",prefix),data.table(read.csv(paste0(td,"/",j),stringsAsFactors = FALSE)))
     }
 
       # rm tmp file
@@ -121,7 +121,7 @@ importMonthlyData = function(yyyy = 2019, mm = NULL){
   inFolderFinal = paste0(ghData,inFolder)
   
   # add filenames to path
-  files = list( bnffile,c(paste0(prefix,"_demog.csv"),paste0(prefix,"_demogMap.csv")),
+  files = list( bnffile,c(paste0("demog_",prefix,".csv"),paste0("demogMap_",prefix,".csv")),
                               qofFiles)
   
   if(is.list(files)){
@@ -142,7 +142,7 @@ importMonthlyData = function(yyyy = 2019, mm = NULL){
       }else{
           sepCsv =","
         }
-      assign(sub(".csv","",j),data.table(read.csv(text = RCurl::getURL(paste0(url,inFolderFinal[i],j )),sep = sepCsv),stringsAsFactors = NULL))
+      assign(sub(".csv","",j),data.table(read.csv(text = RCurl::getURL(paste0(url,inFolderFinal[i],j )),sep = sepCsv),stringsAsFactors = FALSE))
       
       out[k] = mget(c(nameF))
       names(out)[k] = nameF

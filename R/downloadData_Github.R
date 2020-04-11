@@ -75,10 +75,10 @@ downloadData_Github = function(data = c("all","bnf","demog","qof"),
   # add filenames to path
   files = switch(data,
                  "all"= list( bnffile,
-                             c(paste0(prefix,"_demog.feather"),paste0(prefix,"_demogMap.feather")),
+                             c(paste0("demog_",prefix,".feather"),paste0("demogMap_",prefix,".feather")),
                           qofFiles),
                  "bnf"= list(bnffile),
-                 "demog"= list(c(paste0(prefix,"_demog.feather"),paste0(prefix,"_demogMap.feather"))),
+                 "demog"= list(c(paste0("demog_",prefix,".feather"),paste0("demogMap_",prefix,".feather"))),
                  "qof"= list(qofFiles)
                    )
   if(is.list(files)){

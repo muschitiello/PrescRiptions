@@ -3,6 +3,7 @@
 export(downloadData_Github)
 export(downloadDemog)
 export(downloadPLPDzip)
+export(generateSummaries)
 export(importMonthlyData)
 export(readSettings)
 export(setConfig)

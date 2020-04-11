@@ -30,7 +30,7 @@ needed for the use of this R package
 \details{
 The function is used to download BNF (British National Formulary) codes, 
 practice size for demographic groups and quality outcome framework data from the github repository
-called PrescRiptionsData avaioable at the following link:
+called PrescRiptionsData available at the following link:
 https://github.com/muschitiello/PrescRiptionsData. 
 While the repo contains data in different formats, only feather data are downloadable from this function.
 This because feather data are more manageable and compressed.
