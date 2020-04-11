@@ -10,7 +10,7 @@
 ##'
 ##' @details The function is used to download BNF (British National Formulary) codes, 
 ##' practice size for demographic groups and quality outcome framework data from the github repository
-##' called PrescRiptionsData avaioable at the following link:
+##' called PrescRiptionsData available at the following link:
 ##' https://github.com/muschitiello/PrescRiptionsData. 
 ##' While the repo contains data in different formats, only feather data are downloadable from this function.
 ##' This because feather data are more manageable and compressed.
@@ -27,6 +27,10 @@ downloadData_Github = function(data = c("all","bnf","demog","qof"),
                               yyyy = 2019, mm = NULL ,basedir = NULL){
   mm=as.character(stringr::str_pad(mm,width = 2,side = "left",pad = "0"))
 
+  if (str_sub(basedir,start = (nchar(basedir)),end = nchar(basedir))!="/"){
+    basedir = paste0(basedir,"/")
+  }
+  
   # define Repo url
   url = "https://raw.githubusercontent.com/muschitiello/PrescRiptionsData/master/"
   
