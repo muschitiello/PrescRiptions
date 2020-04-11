@@ -70,14 +70,14 @@ importMonthlyData = function(yyyy = 2019, mm = NULL){
   
   for(j in plpdFiles){
     if(grepl("ADDR|addr",j)){
-      assign(paste0("addr",prefix),data.table(read.csv(paste0(td,"/",j))))
+      assign(paste0("addr",prefix),data.table(read.csv(paste0(td,"/",j),stringsAsFactors = NULL)))
     }
     if(grepl("CHEM|chem",j)){
-      assign(paste0("chem",prefix),data.table(read.csv(paste0(td,"/",j))))
+      assign(paste0("chem",prefix),data.table(read.csv(paste0(td,"/",j),stringsAsFactors = NULL)))
       
     }
     if(grepl("PDPI|pdpi",j)){
-      assign(paste0("plpd",prefix),data.table(read.csv(paste0(td,"/",j))))
+      assign(paste0("plpd",prefix),data.table(read.csv(paste0(td,"/",j),stringsAsFactors = NULL)))
     }
 
       # rm tmp file
@@ -142,7 +142,7 @@ importMonthlyData = function(yyyy = 2019, mm = NULL){
       }else{
           sepCsv =","
         }
-      assign(sub(".csv","",j),data.table(read.csv(text = RCurl::getURL(paste0(url,inFolderFinal[i],j )),sep = sepCsv)))
+      assign(sub(".csv","",j),data.table(read.csv(text = RCurl::getURL(paste0(url,inFolderFinal[i],j )),sep = sepCsv),stringsAsFactors = NULL))
       
       out[k] = mget(c(nameF))
       names(out)[k] = nameF
