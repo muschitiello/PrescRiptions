@@ -9,6 +9,7 @@
 ##' @import stringr
 ##' @import readr
 ##' @import config
+##' @import ggthemes
 ##' @importFrom RCurl getURL
 NULL
 

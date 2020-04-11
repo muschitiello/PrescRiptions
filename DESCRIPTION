@@ -10,7 +10,7 @@ Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: GPL
 Depends: R (>= 3.5.0)
-Imports: feather, yaml, data.table, stringr, readr, RCurl, config
+Imports: feather, yaml, data.table, stringr, readr, RCurl, config, ggthemes
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.0.2
