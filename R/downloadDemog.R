@@ -98,11 +98,10 @@ downloadDemog = function(yyyy = 2019, mm = NULL ,basedir = NULL, outFormat = "fe
       message(paste0("File already downloaded for the selected year, month and format"))
       message(paste0("in the ",i," folder"))
     }else{
-      suppressWarnings(dir.create(i))
-      suppressWarnings(dir.create(paste0(i,folder)))
+      suppressWarnings(dir.create(paste0(i,folder),recursive = T))
 
       # check if a csv already exists (valid only for the feather case)
-      if(i == featherDir & dir.exists(paste0(csvDir,folder))&length(list.files(paste0(csvDir,folder)))==2){
+      if(i == csvDir & dir.exists(paste0(csvDir,folder))&length(list.files(paste0(csvDir,folder)))==2){
         td1 = paste0(csvDir,folder,"/","demog_",prefix,".",outF)
         td2 = paste0(csvDir,folder,"/","demogMap_",prefix,".",outF)
       }else{
@@ -112,8 +111,8 @@ downloadDemog = function(yyyy = 2019, mm = NULL ,basedir = NULL, outFormat = "fe
 
         # save file in the specified format
         # download into the placeholder file
-        utils::download.file(url = get(url1), destfile = td1)
-        utils::download.file(url = get(url2), destfile = td2)
+        utils::download.file(url = base::get(url1), destfile = td1)
+        utils::download.file(url = base::get(url2), destfile = td2)
       }
       # save file in the specified format
       data1 = read.csv(td1)
@@ -122,6 +121,19 @@ downloadDemog = function(yyyy = 2019, mm = NULL ,basedir = NULL, outFormat = "fe
       data2 = read.csv(td2)
       path2 = paste0(i,folder,"/","demogMap_",prefix,".",outF)
 
+      if(yyyy==2019 & mm==10){
+        data2 = data.table(data2)
+        setnames(data2,colnames(data2),c("PRACTICE_CODE","PRACTICE_NAME","PRACTICE_POSTCODE","CCG_NAME","CCG_CODE","ONS_CCG_CODE","STP_NAME","STP_CODE","REGION_NAME","COMM_REGION_CODE","ONS_REGION_CODE","COMM_REGION_NAME","REGION_CODE","ONS_COMM_REGION_CODE"))
+        data2[,PUBLICATION:="GP_PRAC_PAT_LIST"]
+        data2[,EXTRACT_DATE:="01OCT2019"]
+        data2 = data2[,mget(c("PUBLICATION","EXTRACT_DATE","PRACTICE_CODE","PRACTICE_NAME","PRACTICE_POSTCODE",
+                              "ONS_CCG_CODE","CCG_CODE","CCG_NAME","STP_CODE","STP_NAME","ONS_REGION_CODE",
+                              "REGION_CODE","REGION_NAME","ONS_COMM_REGION_CODE","COMM_REGION_CODE",
+                              "COMM_REGION_NAME"))]
+        data2 = data.frame(data2)
+        }
+      
+      
       if(i == csvDir){
         write.csv2(data1,path1,row.names = FALSE)
         write.csv2(data2,path2,row.names = FALSE)

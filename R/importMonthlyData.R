@@ -59,11 +59,13 @@ importMonthlyData = function(yyyy = 2019, mm = NULL){
   "plpd201912" = "https://files.digital.nhs.uk/5A/CA6C2E/2019_12_Dec.zip"
 )
   # create the temporary file
-  tf = tempfile(fileext = ".zip")
-  
+  td = tempdir()
+  tf = tempfile(tmpdir = td,fileext = ".zip")
+  if(!dir.exists(td)){
+    dir.create(td)
+  }
   utils::download.file(url = url, destfile = tf)
   # unzip in temporary folder
-  td = tempdir()
   unzip(zipfile = tf, exdir = td)
   
   plpdFiles = list.files(td)[which(grepl("ADDR|CHEM|PDPI|addr|chem|pdpi",list.files(td)))]
@@ -80,10 +82,11 @@ importMonthlyData = function(yyyy = 2019, mm = NULL){
       assign(paste0("plpd",prefix),data.table(read.csv(paste0(td,"/",j),stringsAsFactors = FALSE)))
     }
 
-      # rm tmp file
-        unlink(tf)
-        unlink(td)
   }
+  
+  # rm tmp file
+  unlink(tf)
+  unlink(td,recursive = T)
   
   out = mget(c(paste0("plpd",prefix),paste0("chem",prefix),paste0("addr",prefix)))
 

@@ -34,12 +34,12 @@ generateSummaries = function(plpd = NULL, bnf = NULL, on = "REGION",settings = N
 
 
   data1 = data %>%
-    select(PERIOD,measures) %>%
-    group_by_at(groupVar) %>%
-    summarise(ITEMS = sum(ITEMS), NIC = sum(NIC), ACT.COST = sum(ACT.COST), QUANTITY = sum(QUANTITY))%>%
+    dplyr::select(PERIOD,measures) %>%
+    dplyr::group_by_at(groupVar) %>%
+    dplyr::summarise(ITEMS = sum(ITEMS), NIC = sum(NIC), ACT.COST = sum(ACT.COST), QUANTITY = sum(QUANTITY))%>%
     data.table %>%
     cbind(REGION = settings$region)%>%
-    mutate(PERIOD = paste0(stringr::str_pad(settings$month,2,"left",0),settings$year))%>%
+    dplyr::mutate(PERIOD = paste0(stringr::str_pad(settings$month,2,"left",0),settings$year))%>%
     data.table
   
 
