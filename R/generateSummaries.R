@@ -11,7 +11,9 @@
 
 generateSummaries = function(plpd = NULL, bnf = NULL, on = "REGION",settings = NULL){
   
-  data = merge.data.table(plpd, bnf,by.x = "BNF.CODE", by.y = "BNF.Presentation.Code",all.x = T)
+  setnames(bnf,"BNF.Presentation.Code","BNF.CODE")
+  data = base::merge(plpd, bnf,by = "BNF.CODE" ,all.x = T)
+  setnames(bnf,"BNF.CODE","BNF.Presentation.Code")
   
   # set relevant Variables (the same in both cases)
   
