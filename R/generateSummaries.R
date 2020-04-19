@@ -5,15 +5,29 @@
 ##' @param plpd prescription data.table
 ##' @param bnf bnf data.table
 ##' @param on one of \emph{"REGION"} or \emph{"BNF"} indicating the variables to summarise on. Default is "REGION"
-##' @param settings name of settings variable.
+##' @param year year of interest.
+##' @param month month of interest.
 ##' @export
 
 
-generateSummaries = function(plpd = NULL, bnf = NULL, on = "REGION",settings = NULL){
+generateSummaries = function(plpd = NULL, bnf = NULL, on = "REGION",year = NULL, month = NULL){
+  
+  bnf = data.table(bnf)
+  plpd = data.table(plpd)
+  
+  integers2numericBnf = c("BNF.Chapter.Code","BNF.Section.Code",
+                       "BNF.Paragraph.Code","BNF.Subparagraph.Code")
+  integers2numericplpd = c("ITEMS","QUANTITY","PERIOD")
+  
+  setDT(bnf)[,(integers2numericBnf):=lapply(.SD, function(x) as.numeric(x)),
+             .SDcols = integers2numericBnf]
+  setDT(plpd)[,(integers2numericplpd):=lapply(.SD, function(x) as.numeric(x)),
+             .SDcols = integers2numericplpd]
   
   setnames(bnf,"BNF.Presentation.Code","BNF.CODE")
   data = base::merge(plpd, bnf,by = "BNF.CODE" ,all.x = T)
   setnames(bnf,"BNF.CODE","BNF.Presentation.Code")
+  
   
   # set relevant Variables (the same in both cases)
   
@@ -41,8 +55,9 @@ generateSummaries = function(plpd = NULL, bnf = NULL, on = "REGION",settings = N
     dplyr::summarise(ITEMS = sum(ITEMS), NIC = sum(NIC), ACT.COST = sum(ACT.COST), QUANTITY = sum(QUANTITY))%>%
     data.table %>%
     cbind(REGION = settings$region)%>%
-    dplyr::mutate(PERIOD = paste0(stringr::str_pad(settings$month,2,"left",0),settings$year))%>%
+    dplyr::mutate(PERIOD = paste0(stringr::str_pad(month,2,"left",0),year))%>%
     data.table
   
+  return(data1)
 
 }

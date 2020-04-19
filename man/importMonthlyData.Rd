@@ -4,12 +4,15 @@
 \alias{importMonthlyData}
 \title{importMonthlyData}
 \usage{
-importMonthlyData(yyyy = 2019, mm = NULL)
+importMonthlyData(yyyy = 2019, mm = NULL, whichData = "all")
 }
 \arguments{
 \item{yyyy}{numerical 4 digit year, default = 2019}
 
 \item{mm}{numerical 2 digit month, no default}
+
+\item{whichData}{string indicatin which Data to download. One of "plpd", "bnf", "demog" and "all"
+default = "all"}
 }
 \value{
 the function returns all data upoaded in the workspace
