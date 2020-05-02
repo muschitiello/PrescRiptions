@@ -97,7 +97,8 @@ importMonthlyData = function(yyyy = 2019, mm = NULL, whichData = "all"){
   )
   if(plpdTF){
     # create the temporary file
-    td = tempdir()
+    td=paste0(Sys.getenv("TEMP"),"\\PrescRtemp")
+    on.exit(unlink(td))
     tf = tempfile(tmpdir = td,fileext = ".zip")
     if(!dir.exists(td)){
       dir.create(td)
@@ -105,7 +106,6 @@ importMonthlyData = function(yyyy = 2019, mm = NULL, whichData = "all"){
     utils::download.file(url = url, destfile = tf)
     # unzip in temporary folder
     unzip(zipfile = tf, exdir = td)
-    
     plpdFiles = list.files(td)[which(grepl("ADDR|CHEM|PDPI|addr|chem|pdpi",list.files(td)))]
     
     for(j in plpdFiles){
@@ -125,9 +125,7 @@ importMonthlyData = function(yyyy = 2019, mm = NULL, whichData = "all"){
     # rm tmp file
     unlink(tf)
     unlink(td,recursive = T)
-    tempdir()
-    dir.create(tempdir())
-    
+
     out = mget(c(paste0("plpd",prefix),paste0("chem",prefix),paste0("addr",prefix)))
   }
   ##############################################################

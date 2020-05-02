@@ -28,6 +28,7 @@ generateSummaries = function(plpd = NULL, bnf = NULL, on = "REGION",year = NULL,
   data = base::merge(plpd, bnf,by = "BNF.CODE" ,all.x = T)
   setnames(bnf,"BNF.CODE","BNF.Presentation.Code")
   
+  data[is.na(BNF.Chapter),BNF.Chapter:="Not Defined"]
   
   # set relevant Variables (the same in both cases)
   
@@ -35,6 +36,7 @@ generateSummaries = function(plpd = NULL, bnf = NULL, on = "REGION",year = NULL,
               "BNF.Section", "BNF.Section.Code",
               "ITEMS", "NIC", "ACT.COST", "QUANTITY")
   
+
   data=data[,mget(relVars)]
   
   
