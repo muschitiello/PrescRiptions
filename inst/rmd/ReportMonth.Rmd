@@ -1,0 +1,52 @@
+---
+title: "PrescRipitions "
+subtitle: "England Report  \n ***`r params$monthTitle`*** \n e-Rum2020"
+pagetitle: "Report `r params$monthTitle`"
+author: "cristina.muschitiello@infocamere.it"
+date: "`r format(Sys.time(), '%e %B %Y')`"
+output:
+    prettydoc::html_pretty:
+      theme: architect
+      highlight: github
+      df_print: paged
+      toc: true
+      toc_depth: 4
+      toc_float:
+        collapsed: true
+        smooth_scroll: true
+      number_sections: false
+params:
+  monthTitle: monthTitle
+  prefix: prefix
+  geoArea: geo  
+  outputFolder: outFolder
+  inputFolder: inputFolder
+header-includes:
+- \usepackage{makeidx}
+- \makeindex
+- \usepackage{float} #use the 'float' package
+- \floatplacement{figure}{H} #make every figure with caption = h
+- \usepackage{amsmath}
+- \usepackage{amssymb}
+- \usepackage{amsthm}
+- \usepackage{mathtools}
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+theme_set(theme_economist()) # Sets graphs themes to "The Economist" style
+```
+
+```{r dataImport, include=FALSE, echo=FALSE}
+dataAll = PrescRiptions::importMonthlyData(settings$year, settings$month)
+regionPrescriptions = PrescRiptions::generateSummaries(plpd201802,bnf201901,on = "REGION",year = settings$year, month = settings$month)
+bnfPrescriptions = PrescRiptions::generateSummaries(plpd201802,bnf201901,on = "BNF",year = settings$year, month = settings$month)
+
+```
+## Description
+
+This report provides summary information on prescriptions provided in `r params$geoArea ` during `r params$monthTitle `. This report is generated automatically using the package **PrescRiptions**.
+
+### Summary
+

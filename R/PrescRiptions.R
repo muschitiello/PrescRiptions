@@ -11,6 +11,9 @@
 ##' @import config
 ##' @import ggthemes
 ##' @import magrittr
+##' @import rmarkdown
+##' @import ggplot2
+##' @import prettydoc
 ##' @importFrom dplyr group_by_at summarise mutate select
 ##' @importFrom RCurl getURL
 NULL

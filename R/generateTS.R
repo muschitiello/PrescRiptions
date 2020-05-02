@@ -88,7 +88,7 @@ generateTS = function(from = "mm/yyyy", to = "mm/yyyy", settings = NULL, on = c(
   times2extractBnf=times[yyyy %in%year2extract &  mm=="01"]
   for (t in times2extractBnf[,times]){
     assign("bnfData",
-           importMonthlyData(yyyy = times2extractBnf[times==t,yyyy], mm = times2extractBnf[times==t,mm],whichData = "bnf"))
+           monthlyData_import(year = times2extractBnf[times==t,yyyy], month = times2extractBnf[times==t,mm],whichData = "bnf"))
     
     for (i in 1:length(bnfData)){
       print(names(bnfData)[i])
@@ -101,7 +101,7 @@ generateTS = function(from = "mm/yyyy", to = "mm/yyyy", settings = NULL, on = c(
   for (t in times2extract[,times]){
     print(paste0(times2extract[times==t,yyyy]," - ",times2extract[times==t,mm]))
     assign("plpdData",
-           importMonthlyData(yyyy = times2extract[times==t,yyyy], mm = times2extract[times==t,mm],whichData = "plpd"))
+           monthlyData_import(year = times2extract[times==t,yyyy], month = times2extract[times==t,mm],whichData = "plpd"))
     
     for (i in 1:length(plpdData)){
       if(i==1){print(names(plpdData)[i])}

@@ -1,9 +1,10 @@
-##' importMonthlyData
+##' monthlyData_import
 ##'
 ##' import in the workspace plpd, bnf, demog and qof data for the specified month and year as settend in the yml file
 ##'
-##' @param yyyy numerical 4 digit year, default = 2019
-##' @param mm numerical 2 digit month, no default
+##' @param year numerical 4 digit year, default = 2019
+##' @param month numerical 2 digit month, no default
+##' @param basedir root directory
 ##' @param whichData string indicatin which Data to download. One of "plpd", "bnf", "demog" and "all"
 ##' default = "all"
 ##'
@@ -22,7 +23,9 @@
 ##'
 
 
-importMonthlyData = function(yyyy = 2019, mm = NULL, whichData = "all"){
+monthlyData_import = function(year, month, basedir, whichData = "all"){
+  
+  month=as.character(stringr::str_pad(month,width = 2,side = "left",pad = "0"))
   
   whichDataAll = c("all","plpd","bnf","demog","qof")
   
@@ -59,13 +62,11 @@ importMonthlyData = function(yyyy = 2019, mm = NULL, whichData = "all"){
     }
   }
   
-  mm=as.character(stringr::str_pad(mm,width = 2,side = "left",pad = "0"))
-  
   ##############################################################
   #### plpd from source
   
-  plpdurl = paste0("plpd",yyyy,mm)
-  prefix = paste0(yyyy,mm)
+  plpdurl = paste0("plpd",year,month)
+  prefix = paste0(year,month)
   # folder = paste0("plpd_",prefix)
   
   url = switch(plpdurl,
@@ -95,6 +96,7 @@ importMonthlyData = function(yyyy = 2019, mm = NULL, whichData = "all"){
                "plpd201911" = "https://files.digital.nhs.uk/66/972E65/2019_11_Nov.zip",
                "plpd201912" = "https://files.digital.nhs.uk/5A/CA6C2E/2019_12_Dec.zip"
   )
+  
   if(plpdTF){
     # create the temporary file
     td=paste0(Sys.getenv("TEMP"),"\\PrescRtemp")
@@ -139,17 +141,17 @@ importMonthlyData = function(yyyy = 2019, mm = NULL, whichData = "all"){
   ghData = c("02_bnf/csv","03_demog/csv","04_qof/csv")
   
   # chose year for bnf file
-  bnffile = switch(as.character(yyyy),
-                   "2018" = "bnf201901.csv",
-                   "2019" = "bnf202001.csv")
+  bnffile = switch(as.character(year),
+                   "2018" = "bnf_201901.csv",
+                   "2019" = "bnf_202001.csv")
   
   # chose biennium for qof file
-  qoffolder = switch(as.character(yyyy),
-                     "2018" = "qof1819csv",
-                     "2019" = "qof1819csv")
-  qofprefix = switch(as.character(yyyy),
-                     "2018" = "qofGP1819",
-                     "2019" = "qofGP1819")
+  qoffolder = switch(as.character(year),
+                     "2018" = "qof_1819",
+                     "2019" = "qof_1819")
+  qofprefix = switch(as.character(year),
+                     "2018" = "qofGP_1819",
+                     "2019" = "qofGP_1819")
   
   # define qof file names
   qofFiles = paste0(qofprefix,c("_CardioVascular","_dependency",
