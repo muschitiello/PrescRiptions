@@ -3,46 +3,23 @@
 ##' Automatically generates a Markdown pdf report for a single month
 ##'
 ##' @param settings settings with parameters
-##' @param outFolder Folder where to save the Report
+##' @param monthData list with all data for month, as returded by \emph{monthlyData_import()}
+##' 
 ##' @return The function generates a html file
 ##' @details If some encoding problem occurs, please set UTF-8 as saving enconding from \emph{File/Save with Encoding...}
 ##' @export
 ##' 
 
-renderMonthlyReport = function(settings, outFolder) {
+renderMonthlyReport = function(settings,monthData) {
 
+  dirs = dirsGen(settings)
   year = settings$year
   month = settings$month
   geo = settings$region
-  
-    # calculate Year
-  if(!is.null(year)){
-    if(!(is.numeric(year)|is.integer(year))){
-      stop("year must be numeric")
-    }else{
-      if(!(nchar(year)%in%c(2,4))){
-        stop("year incorretto")
-      }else{
-        if(nchar(year)==4){
-          yearOrig = as.integer(year)
-          year = substr(year,3,4)
-        }
-      }
-    }
-  }else{
-    yearOrig = as.integer(year)
-    year = substr(year(Sys.Date()),3,4)
-  }
-  
-  # check month
-  if(!(is.numeric(month)|is.integer(month))){
-    stop("month must be numeric")
-  }
-  
-  
-  # creazione oggetto per successiva denominazione file finali
-  month0 = stringr::str_pad(month,2,"left",0)
-  
+  outFolder = dirs$outputDir
+  month0=as.character(stringr::str_pad(settings$month,width = 2,side = "left",pad = "0"))
+  year2 = substr(year,3,4)
+
   #definizione nome folder
   monthNames = c("January", "February", "March", "April", "May", "June", "July",
                "August","September", "October", "November","December")  
@@ -51,19 +28,25 @@ renderMonthlyReport = function(settings, outFolder) {
   prefixName = paste0(year,month0)
   inFolder = paste0(folderOut,"/")
   monthTit = paste0(monthNames[month]," ",yearOrig)
-   
-
+  NameMonth = monthNames[month]
+  
+  
   
   render(
     system.file("rmd",input="ReportMonth.Rmd",package = "PrescRiptions"), 
     output_format = prettydoc::html_pretty("architect"),
     output_dir = folderOut,
     params = list(
+      year = year,
+      month = month,
+      monthName = NameMonth,
       monthTitle = monthTit,
       prefix = prefixName,
       geoArea = geo,
       outputFolder = folderOut,
-      inputFolder = inFolder
+      inputFolder = inFolder,
+      monthData = monthData,
+      settings = settings
     ),
     encoding = "UTF8",
     run_pandoc = TRUE,

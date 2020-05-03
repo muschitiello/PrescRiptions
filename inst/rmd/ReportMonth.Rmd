@@ -1,9 +1,9 @@
 ---
-title: "PrescRipitions "
-subtitle: "England Report  \n ***`r params$monthTitle`*** \n e-Rum2020"
+title: "England Report - *`r params$monthTitle`* "
+subtitle: "**PrescRiptions**"
+author: Cristina Muschitiello - Niccolò Stamboglis
 pagetitle: "Report `r params$monthTitle`"
-author: "cristina.muschitiello@infocamere.it"
-date: "`r format(Sys.time(), '%e %B %Y')`"
+date: "e-Rum2020 - 20th June 2020"
 output:
     prettydoc::html_pretty:
       theme: architect
@@ -16,11 +16,16 @@ output:
         smooth_scroll: true
       number_sections: false
 params:
+  year: year,
+  month: month,
+  monthName: NameMonth,
   monthTitle: monthTitle
   prefix: prefix
   geoArea: geo  
   outputFolder: outFolder
   inputFolder: inputFolder
+  monthData: monthData
+  settings: settings
 header-includes:
 - \usepackage{makeidx}
 - \makeindex
@@ -39,9 +44,15 @@ theme_set(theme_economist()) # Sets graphs themes to "The Economist" style
 ```
 
 ```{r dataImport, include=FALSE, echo=FALSE}
-dataAll = PrescRiptions::importMonthlyData(settings$year, settings$month)
-regionPrescriptions = PrescRiptions::generateSummaries(plpd201802,bnf201901,on = "REGION",year = settings$year, month = settings$month)
-bnfPrescriptions = PrescRiptions::generateSummaries(plpd201802,bnf201901,on = "BNF",year = settings$year, month = settings$month)
+
+for (i in 1:length(params$monthData)){
+  # print(names(dataAll)[i])
+  assign(gsub("[[:digit:]]|_","",names(monthData))[i],params$monthData[[i]])
+}
+
+regionPrescriptions = PrescRiptions::generateSummaries(plpd,bnf,on = "REGION",params$settings)
+bnfPrescriptions = PrescRiptions::generateSummaries(plpd,bnf,on = "BNF",params$settings)
+
 
 ```
 ## Description
@@ -50,3 +61,30 @@ This report provides summary information on prescriptions provided in `r params$
 
 ### Summary
 
+In `r params$geoArea` during `r params$monthTitle ` the following numbers were registered:
+
+```{r table1,  include=TRUE}
+
+knitr::kable(regionPrescriptions,
+             caption = "Region Numbers") %>%
+  kableExtra::kable_styling(latex_options = c("hold_position", "repeat_header","striped")
+                ,bootstrap_options = c("hold_position", "repeat_header","striped", "hover", "condensed", "responsive")
+  ) 
+```
+### Summary by BNF Code
+
+Information on individual BNF codes can be summarised as follows.
+
+**Prescribed items**
+
+Prescribed items are divided by BNF code as follows
+
+```{r, echo=FALSE, fig.width=8, fig.height=6}
+# p <- ggplot(DF_Summary_BNF_Code_Month, aes(x=reorder(BNF.Chapter, -ITEMS), y=ITEMS)) + 
+#   geom_bar(stat="identity", width=.5, fill="tomato3") + 
+#   labs(title="Items by BNF Chapter", 
+#        subtitle="England", 
+#        caption="source: NHS") + 
+#   theme(axis.text.x = element_text(angle=65, vjust=0.6))
+# p
+```
