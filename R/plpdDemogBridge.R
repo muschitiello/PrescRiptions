@@ -11,7 +11,7 @@
 plpdDemogBridge = function(plpd = NULL, demogMap = NULL, settings = NULL){
 
   setnames(demogMap,"PRACTICE_CODE","PRACTICE")
-  on.exit(setnames(demogMap,"PRACTICE","PRACTICE_CODE"))
+  on.exit(setnames(demogMap,"PRACTICE","PRACTICE_CODE",skip_absent=TRUE))
   data = base::merge(plpd,demogMap,by="PRACTICE",all.x = T)[,mget(c("PRACTICE","ONS_CCG_CODE"))]
   setnames(demogMap,"PRACTICE","PRACTICE_CODE")
   

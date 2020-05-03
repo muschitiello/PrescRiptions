@@ -1,18 +1,20 @@
-##' renderReport
+##' renderMonthlyReport
 ##'
 ##' Automatically generates a Markdown pdf report for a single month
 ##'
-##' @param year year of interest.
-##' @param month month of interest.
+##' @param settings settings with parameters
 ##' @param outFolder Folder where to save the Report
 ##' @return The function generates a html file
 ##' @details If some encoding problem occurs, please set UTF-8 as saving enconding from \emph{File/Save with Encoding...}
 ##' @export
 ##' 
 
-renderMonthlyReport = function(month, year= NULL, geo = "England",
-                        outFolder = settings$basedir) {
+renderMonthlyReport = function(settings, outFolder) {
 
+  year = settings$year
+  month = settings$month
+  geo = settings$region
+  
     # calculate Year
   if(!is.null(year)){
     if(!(is.numeric(year)|is.integer(year))){

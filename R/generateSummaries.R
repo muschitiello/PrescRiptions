@@ -5,13 +5,17 @@
 ##' @param plpd prescription data.table
 ##' @param bnf bnf data.table
 ##' @param on one of \emph{"REGION"} or \emph{"BNF"} indicating the variables to summarise on. Default is "REGION"
-##' @param year year of interest.
-##' @param month month of interest.
+##' @param settings analysis settings
 ##' @export
 
 
-generateSummaries = function(plpd = NULL, bnf = NULL, on = "REGION",year = NULL, month = NULL){
+generateSummaries = function(plpd,bnf, on = "REGION",settings){
   
+  dirs = dirsGen(settings)
+  month=as.character(stringr::str_pad(settings$month,width = 2,side = "left",pad = "0"))
+  year = settings$year
+  rootdir = settings$rootdir
+
   bnf = data.table(bnf)
   plpd = data.table(plpd)
   

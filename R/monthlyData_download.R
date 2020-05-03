@@ -1,10 +1,8 @@
 ##' monthlyData_download
 ##'
-##' download plpd, bnf, demog and qof data in feather format for the specified month and year as settend in the yml file
+##' download plpd, bnf, demog and qof data in csv format for the specified month and year as settend in the yml file
 ##'
-##' @param year numerical 4 digit year, default = 2019
-##' @param month numerical 2 digit month, no default
-##' @param basedir root directory
+##' @param settings analysis settings
 ##' @param whichData string indicatin which Data to download. One of "plpd", "bnf", "demog" and "all"
 ##' default = "all"
 ##'
@@ -15,7 +13,7 @@
 ##'  - qof: github/csv
 ##' github repository at this link: \emph{https://github.com/muschitiello/PrescRiptionsData}
 ##' 
-##' @seealso \code{\link{downloadData_Github}}, \code{\link{downloadDemog}}, \code{\link{downloadPLPDzip}}
+##' @seealso \code{\link{monthlyData_import}}
 ##' 
 ##' @return the function returns all data upoaded in the workspace
 ##' 
@@ -23,16 +21,14 @@
 ##'
 
 
-monthlyData_download = function(year, month, basedir, whichData = "all"){
- 
-  month=as.character(stringr::str_pad(month,width = 2,side = "left",pad = "0"))
-  plpdurl = paste0("plpd",year,month)
-  prefix = paste0(year,month)
-  folder = paste0("plpd_",prefix)
+monthlyData_download = function(settings, whichData = "all"){
+  
+  dirs = dirsGen(settings)
+  month=as.character(stringr::str_pad(settings$month,width = 2,side = "left",pad = "0"))
+  year = settings$year
+  rootdir = settings$rootdir
+  
   whichDataAll = c("all","plpd","bnf","demog","qof")
-  outF = "csv"
-  dataInputPath = paste0(basedir,"/dataInput/")
-  outDir = paste0(dataInputPath,"01_plpd/")
   
   if(any(!whichData%in%whichDataAll)){
     stop(paste0("Error in whichData. Admitted values are: ",paste0(whichDataAll, collapse = ", ")," quoted"))
@@ -67,14 +63,13 @@ monthlyData_download = function(year, month, basedir, whichData = "all"){
     }
   }
   
-  month=as.character(stringr::str_pad(month,width = 2,side = "left",pad = "0"))
-  
   ##############################################################
   #### plpd from source
   
   plpdurl = paste0("plpd",year,month)
   prefix = paste0(year,month)
-  # folder = paste0("plpd_",prefix)
+  folder = paste0("plpd_",prefix)
+  outF = "csv"
   
   url = switch(plpdurl,
                # Data URL
@@ -104,14 +99,16 @@ monthlyData_download = function(year, month, basedir, whichData = "all"){
                "plpd201912" = "https://files.digital.nhs.uk/5A/CA6C2E/2019_12_Dec.zip"
   )
   if(plpdTF){
+    message(paste(folder))
     # check if file already exists
     # if not, create folder
-    if(dir.exists(paste0(outDir,folder)) & length(list.files(paste0(outDir,folder)))==3){
-      message(paste0("File already downloaded for the selected year and month"))
-      message(paste0("in the ",outDir," folder"))
+    if(dir.exists(paste0(dirs$plpdRootDir,folder)) & length(list.files(paste0(dirs$plpdRootDir,folder)))==3){
+      message(paste0("Files already exist"))
     }else{
-      suppressWarnings(dir.create(paste0(outDir,folder),recursive = T))
-
+      message("download")
+      
+      suppressWarnings(dir.create(paste0(dirs$plpdRootDir,folder),recursive = T))
+      
       # create the temporary file
       td=paste0(Sys.getenv("TEMP"),"\\PrescRtemp")
       on.exit(unlink(td))
@@ -121,26 +118,26 @@ monthlyData_download = function(year, month, basedir, whichData = "all"){
       }
       utils::download.file(url = url, destfile = tf)
       # unzip in temporary folder
-      unzip(zipfile = tf, exdir = paste0(outDir,folder))
+      unzip(zipfile = tf, exdir = paste0(dirs$plpdRootDir,folder))
       
-      plpdFiles = list.files(paste0(outDir,folder))[which(
-        grepl("ADDR|CHEM|PDPI|addr|chem|pdpi",list.files(paste0(outDir,folder))))]
+      plpdFiles = list.files(paste0(dirs$plpdRootDir,folder))[which(
+        grepl("ADDR|CHEM|PDPI|addr|chem|pdpi",list.files(paste0(dirs$plpdRootDir,folder))))]
       
       # save file in the specified format
       for(j in plpdFiles){
         if(grepl("ADDR|addr",j)){
-          path = paste0(outDir,folder,"/","addr_",prefix,".",outF)
-          if(!file.rename(paste0(outDir,folder,"/",j),path)){"FALSE"}
+          path = paste0(dirs$plpdRootDir,folder,"/","addr_",prefix,".",outF)
+          if(!file.rename(paste0(dirs$plpdRootDir,folder,"/",j),path)){"FALSE"}
         }
         if(grepl("CHEM|chem",j)){
-          path = paste0(outDir,folder,"/","chem_",prefix,".",outF)
-          if(!file.rename(paste0(outDir,folder,"/",j),path)){"FALSE"}
+          path = paste0(dirs$plpdRootDir,folder,"/","chem_",prefix,".",outF)
+          if(!file.rename(paste0(dirs$plpdRootDir,folder,"/",j),path)){"FALSE"}
         }
         if(grepl("PDPI|pdpi",j)){
-          path = paste0(outDir,folder,"/","pdpi_",prefix,".",outF)
-          if(!file.rename(paste0(outDir,folder,"/",j),path)){"FALSE"}
+          path = paste0(dirs$plpdRootDir,folder,"/","pdpi_",prefix,".",outF)
+          if(!file.rename(paste0(dirs$plpdRootDir,folder,"/",j),path)){"FALSE"}
         }
-
+        
       }
       
       # rm tmp file
@@ -148,20 +145,11 @@ monthlyData_download = function(year, month, basedir, whichData = "all"){
       unlink(td,recursive = T)
       
     }
-
-    message("Files downloaded in:")
-    message(outDir)
+    
   }
   ##############################################################
   #### bnf, demog, qof from github
-  
-  
-  # define Repo url
-  url = "https://raw.githubusercontent.com/muschitiello/PrescRiptionsData/master/"
-  
-  # switch to main folder
-  ghData = c("02_bnf/csv","03_demog/csv","04_qof/csv")
-  
+
   # chose year for bnf file
   bnffile = switch(as.character(year),
                    "2018" = "bnf_201901.csv",
@@ -183,14 +171,14 @@ monthlyData_download = function(year, month, basedir, whichData = "all"){
   inFolder = c("/",paste0("/demog_",prefix,"/"),paste0("/",qoffolder,"/"))
   
   # define final folder name for data to be downloaded
-  inFolderFinal = paste0(ghData,inFolder)
+  inFolderFinal = paste0(dirs$gitHubCsvDir,inFolder)
   outFolderFinal = gsub("/csv","",inFolderFinal)
   
   # add filenames to path
   inFiles = list( bnffile,c(paste0("demog_",prefix,".csv"),paste0("demogMap_",prefix,".csv")),
-                qofFiles)
+                  qofFiles)
   
-
+  
   if(is.list(inFiles)){
     names(inFiles) = inFolderFinal
   }
@@ -207,24 +195,32 @@ monthlyData_download = function(year, month, basedir, whichData = "all"){
     
     inFiles = inFiles[filesN]
     inFolderFinal = inFolderFinal[filesN]
-    # define folder name for final download
-    # folder = c("bnf","demog","qof")
-    
+
     # final download 
     for (i in 1:length(inFiles)){
-      
       for (j in inFiles[[i]]){
-        # nameF = sub(".csv","",j)
-        # toFolder=names(inFiles[i])
-        if(!dir.exists(paste0(dataInputPath,outFolderFinal[i]))){
-          dir.create(paste0(dataInputPath,outFolderFinal[i]),recursive = T)
+        message(paste(j,collapse='\n'))
+        if(file.exists(paste0(dirs$inputdir,outFolderFinal[i],j))){
+          message("Files already exist")
+        }else{
+          message("download")
+          if(!dir.exists(paste0(dirs$inputdir,outFolderFinal[i]))){
+            dir.create(paste0(dirs$inputdir,outFolderFinal[i]),recursive = T)
+          }
+          download.file(url = paste0(dirs$urlGH,inFolderFinal[i],j),
+                        destfile = paste0(dirs$inputdir,outFolderFinal[i],j))
+          
+          if(grepl("bnf",j)){
+            bnf = read.csv(paste0(dirs$inputdir,outFolderFinal[i],j),sep = ",",stringsAsFactors = FALSE)
+            write.csv2(bnf,paste0(dirs$inputdir,outFolderFinal[i],j),row.names = F)
+          }
+          
         }
-        download.file(url = paste0(url,inFolderFinal[i],j),
-                      destfile = paste0(dataInputPath,outFolderFinal[i],"/",j))
       }
     }
   }
-  return(out)
+  
+  return("All Files Downloaded")
   
 }
 

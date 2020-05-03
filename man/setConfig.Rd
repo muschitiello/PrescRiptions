@@ -4,10 +4,10 @@
 \alias{setConfig}
 \title{setConfig}
 \usage{
-setConfig(basedir, year, month, region)
+setConfig(rootdir, year, month, region)
 }
 \arguments{
-\item{basedir}{path to an existing working directory}
+\item{rootdir}{path to an existing working directory}
 
 \item{year}{numeric. Year of interest}
 
