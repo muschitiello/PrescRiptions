@@ -4,13 +4,7 @@
 \alias{generateSummaries}
 \title{generateSummaries}
 \usage{
-generateSummaries(
-  plpd = NULL,
-  bnf = NULL,
-  on = "REGION",
-  year = NULL,
-  month = NULL
-)
+generateSummaries(plpd, bnf, on = "REGION", settings)
 }
 \arguments{
 \item{plpd}{prescription data.table}
@@ -19,9 +13,7 @@ generateSummaries(
 
 \item{on}{one of \emph{"REGION"} or \emph{"BNF"} indicating the variables to summarise on. Default is "REGION"}
 
-\item{year}{year of interest.}
-
-\item{month}{month of interest.}
+\item{settings}{analysis settings}
 }
 \description{
 creates summaries at regional level

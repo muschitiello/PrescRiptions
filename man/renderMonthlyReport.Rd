@@ -4,12 +4,12 @@
 \alias{renderMonthlyReport}
 \title{renderMonthlyReport}
 \usage{
-renderMonthlyReport(settings, outFolder)
+renderMonthlyReport(settings, monthData)
 }
 \arguments{
 \item{settings}{settings with parameters}
 
-\item{outFolder}{Folder where to save the Report}
+\item{monthData}{list with all data for month, as returded by \emph{monthlyData_import()}}
 }
 \value{
 The function generates a html file

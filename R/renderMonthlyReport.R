@@ -27,7 +27,7 @@ renderMonthlyReport = function(settings,monthData) {
   folderOut = paste0(outFolder,month0,"_",monthNames[month],"_",year)
   prefixName = paste0(year,month0)
   inFolder = paste0(folderOut,"/")
-  monthTit = paste0(monthNames[month]," ",yearOrig)
+  monthTit = paste0(monthNames[month]," ",year)
   NameMonth = monthNames[month]
   
   

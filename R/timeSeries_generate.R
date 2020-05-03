@@ -145,26 +145,23 @@ timeSeries_generate = function(from = "mm/yyyy", to = "mm/yyyy", settings = NULL
       ### AGGREGATE
       
       if(REGION_TF){
+        tempSet$year=times2extract[times==t,yyyy]
+        tempSet$month=as.character(times2extract[times==t,mm])
         if(exists("regionPresc_ts")){
-          regionPresc_ts = rbind(regionPresc_ts,generateSummaries(plpdDat,bnfDat,on = "REGION",
-                                                                  year = times2extract[times==t,yyyy],
-                                                                  month = times2extract[times==t,mm]))
+          regionPresc_ts = rbind(regionPresc_ts,generateSummaries(plpdDat,bnfDat,on = "REGION",settings = tempSet))
         }else{
-          regionPresc_ts = generateSummaries(plpdDat,bnfDat,on = "REGION",
-                                             year = times2extract[times==t,yyyy],
-                                             month = times2extract[times==t,mm])
+          regionPresc_ts = generateSummaries(plpdDat,bnfDat,on = "REGION",settings = tempSet)
         }
       }
       
       if(BNF_TF){
+        tempSet$year=times2extract[times==t,yyyy]
+        tempSet$month=as.character(times2extract[times==t,mm])
+        
         if(exists("bnfPresc_ts")){
-          bnfPresc_ts = unique(rbind(bnfPresc_ts,suppressWarnings(generateSummaries(plpdDat,bnfDat,on = "BNF",
-                                                                                    year = times2extract[times==t,yyyy],
-                                                                                    month = times2extract[times==t,mm]))))
+          bnfPresc_ts = unique(rbind(bnfPresc_ts,suppressWarnings(generateSummaries(plpdDat,bnfDat,on = "BNF",settings = tempSet))))
         }else{
-          bnfPresc_ts = suppressWarnings(generateSummaries(plpdDat,bnfDat,on = "BNF",
-                                                           year = times2extract[times==t,yyyy],
-                                                           month = times2extract[times==t,mm]))
+          bnfPresc_ts = suppressWarnings(generateSummaries(plpdDat,bnfDat,on = "BNF",settings = tempSet))
         }
       }
       ### REMOVE
