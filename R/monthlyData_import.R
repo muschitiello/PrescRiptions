@@ -139,7 +139,11 @@ monthlyData_import = function(settings,whichData = "all",sample=TRUE){
       )
       
       # create the temporary file
+      if(Sys.getenv("TEMP")!=""){
       td=paste0(Sys.getenv("TEMP"),"\\PrescRtemp")
+      }else{
+        td="PrescRtemp"
+      }
       on.exit(unlink(td))
       tf = tempfile(tmpdir = td,fileext = ".zip")
       if(!dir.exists(td)){
