@@ -4,13 +4,16 @@
 \alias{monthlyData_import}
 \title{monthlyData_import}
 \usage{
-monthlyData_import(settings, whichData = "all")
+monthlyData_import(settings, whichData = "all", sample = TRUE)
 }
 \arguments{
 \item{settings}{analysis settings}
 
 \item{whichData}{string indicatin which Data to download. One of "plpd", "bnf", "demog" and "all"
 default = "all"}
+
+\item{sample}{logic. if TRUE (default) only 500.000 rows will be uploaded in the workspace. 
+Added for usage on Rstudio Cloud for teaching/presenting purposes}
 }
 \value{
 the function returns all data upoaded in the workspace

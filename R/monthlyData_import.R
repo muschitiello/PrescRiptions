@@ -5,6 +5,8 @@
 ##' @param settings analysis settings
 ##' @param whichData string indicatin which Data to download. One of "plpd", "bnf", "demog" and "all"
 ##' default = "all"
+##' @param sample logic. if TRUE (default) only 500.000 rows will be uploaded in the workspace. 
+##' Added for usage on Rstudio Cloud for teaching/presenting purposes
 ##'
 ##' @details Import all data for one month analysis in the workspace. data are imported from the following sources:
 ##'  - plpd: website 
@@ -21,7 +23,7 @@
 ##'
 
 
-monthlyData_import = function(settings,whichData = "all"){
+monthlyData_import = function(settings,whichData = "all",sample=TRUE){
   
   dirs = dirsGen(settings)
   
@@ -81,7 +83,7 @@ monthlyData_import = function(settings,whichData = "all"){
       message(paste0("File already downloaded. Import from rootDir"))
       plpdFiles = list.files(paste0(dirs$plpdRootDir,folder))[
         which(grepl("ADDR|CHEM|PDPI|addr|chem|pdpi",list.files(paste0(dirs$plpdRootDir,folder))))]
-        
+      
       for(j in plpdFiles){
         message(j)
         if(grepl("ADDR|addr",j)){
@@ -92,7 +94,12 @@ monthlyData_import = function(settings,whichData = "all"){
           
         }
         if(grepl("PDPI|pdpi",j)){
-          assign(paste0("plpd_",prefix),data.table(read.csv(paste0(paste0(dirs$plpdRootDir,folder),"/",j),stringsAsFactors = FALSE)))
+          if(sample){
+            assign(paste0("plpd_",prefix),data.table(read.csv(paste0(paste0(dirs$plpdRootDir,folder),"/",j),stringsAsFactors = FALSE,nrows = 500000)))
+          }else{
+            assign(paste0("plpd_",prefix),data.table(read.csv(paste0(paste0(dirs$plpdRootDir,folder),"/",j),stringsAsFactors = FALSE)))
+          }     
+
         }
         
       }
@@ -154,7 +161,11 @@ monthlyData_import = function(settings,whichData = "all"){
           
         }
         if(grepl("PDPI|pdpi",j)){
-          assign(paste0("plpd_",prefix),data.table(read.csv(paste0(td,"/",j),stringsAsFactors = FALSE)))
+          if(sample){
+            assign(paste0("plpd_",prefix),data.table(read.csv(paste0(td,"/",j),stringsAsFactors = FALSE,nrows = 500000)))
+          }else{
+            assign(paste0("plpd_",prefix),data.table(read.csv(paste0(td,"/",j),stringsAsFactors = FALSE)))
+          }       
         }
         
       }
@@ -163,92 +174,93 @@ monthlyData_import = function(settings,whichData = "all"){
       unlink(tf)
       unlink(td,recursive = T)
     }     
-      out = mget(c(paste0("plpd_",prefix),paste0("chem_",prefix),paste0("addr_",prefix)))
-}
-    ##############################################################
-    #### bnf, demog, qof from github
-    
-    
-    # define Repo url
-    url = "https://raw.githubusercontent.com/muschitiello/PrescRiptionsData/master/"
-    
-    # switch to main folder
-    ghData = c("02_bnf/csv","03_demog/csv","04_qof/csv")
-    
-    # chose year for bnf file
-    bnffile = switch(as.character(year),
-                     "2018" = "bnf_201901.csv",
-                     "2019" = "bnf_202001.csv")
-    
-    # chose biennium for qof file
-    qoffolder = switch(as.character(year),
-                       "2018" = "qof_1819",
-                       "2019" = "qof_1819")
-    qofprefix = switch(as.character(year),
-                       "2018" = "qofGP_1819",
-                       "2019" = "qofGP_1819")
-    
-    # define qof file names
-    qofFiles = paste0(qofprefix,c("_CardioVascular","_dependency",
-                                  "_lifestyle","_mental","_muscul","_respiratory"),".csv")
-    
-    # define subfolder name
-    inFolder = c("/",paste0("/demog_",prefix,"/"),paste0("/",qoffolder,"/"))
-    
-    # define final folder name for data to be downloaded
-    inFolderFinal = paste0(ghData,inFolder)
-    
-    # add filenames to path
-    files = list( bnffile,c(paste0("demog_",prefix,".csv"),paste0("demogMap_",prefix,".csv")),
-                  qofFiles)
-    
-    if(is.list(files)){
-      names(files) = inFolderFinal
-    }
-    
-    if(any(bnfTF,demogTF,qofTF)){
-      if(all(bnfTF&demogTF&qofTF)){filesN=1:3}
-      if(all(bnfTF&demogTF&!qofTF)){filesN=1:2}
-      if(all(bnfTF&!demogTF&qofTF)){filesN=c(1,3)}
-      if(all(!bnfTF&demogTF&qofTF)){filesN=2:3}
-      if(all(bnfTF&!demogTF&!qofTF)){filesN=1}
-      if(all(!bnfTF&demogTF&!qofTF)){filesN=2}
-      if(all(!bnfTF&!demogTF&qofTF)){filesN=3}
-      
-      
-      files = files[filesN]
-      inFolderFinal = inFolderFinal[filesN]
-      # define folder name for final download
-      # folder = c("bnf","demog","qof")
-      
-      if(exists("out")){
-        k=length(out)+1
-      }else{
-        out=list()
-        k=1
-      }
-      
-      
-      # final download 
-      for (i in 1:length(files)){
-        
-        for (j in files[[i]]){
-          nameF = sub(".csv","",j)
-          if(grepl("demog|qof",j)){
-            sepCsv = ";"
-          }else{
-            sepCsv =","
-          }
-          assign(sub(".csv","",j),data.table(read.csv(text = RCurl::getURL(paste0(url,inFolderFinal[i],j )),sep = sepCsv),stringsAsFactors = FALSE))
-          
-          out[k] = mget(c(nameF))
-          names(out)[k] = nameF
-          k=k+1
-          
-        }
-      }
-    }
-    return(out)
-    
+    out = mget(c(paste0("plpd_",prefix),paste0("chem_",prefix),paste0("addr_",prefix)))
+  }
+  ##############################################################
+  #### bnf, demog, qof from github
+  
+  
+  # define Repo url
+  url = "https://raw.githubusercontent.com/muschitiello/PrescRiptionsData/master/"
+  
+  # switch to main folder
+  ghData = c("02_bnf/csv","03_demog/csv","04_qof/csv")
+  
+  # chose year for bnf file
+  bnffile = switch(as.character(year),
+                   "2018" = "bnf_201901.csv",
+                   "2019" = "bnf_202001.csv")
+  
+  # chose biennium for qof file
+  qoffolder = switch(as.character(year),
+                     "2018" = "qof_1819",
+                     "2019" = "qof_1819")
+  qofprefix = switch(as.character(year),
+                     "2018" = "qofGP_1819",
+                     "2019" = "qofGP_1819")
+  
+  # define qof file names
+  qofFiles = paste0(qofprefix,c("_CardioVascular","_dependency",
+                                "_lifestyle","_mental","_muscul","_respiratory"),".csv")
+  
+  # define subfolder name
+  inFolder = c("/",paste0("/demog_",prefix,"/"),paste0("/",qoffolder,"/"))
+  
+  # define final folder name for data to be downloaded
+  inFolderFinal = paste0(ghData,inFolder)
+  
+  # add filenames to path
+  files = list( bnffile,c(paste0("demog_",prefix,".csv"),paste0("demogMap_",prefix,".csv")),
+                qofFiles)
+  
+  if(is.list(files)){
+    names(files) = inFolderFinal
   }
   
+  if(any(bnfTF,demogTF,qofTF)){
+    if(all(bnfTF&demogTF&qofTF)){filesN=1:3}
+    if(all(bnfTF&demogTF&!qofTF)){filesN=1:2}
+    if(all(bnfTF&!demogTF&qofTF)){filesN=c(1,3)}
+    if(all(!bnfTF&demogTF&qofTF)){filesN=2:3}
+    if(all(bnfTF&!demogTF&!qofTF)){filesN=1}
+    if(all(!bnfTF&demogTF&!qofTF)){filesN=2}
+    if(all(!bnfTF&!demogTF&qofTF)){filesN=3}
+    
+    
+    files = files[filesN]
+    inFolderFinal = inFolderFinal[filesN]
+    # define folder name for final download
+    # folder = c("bnf","demog","qof")
+    
+    if(exists("out")){
+      k=length(out)+1
+    }else{
+      out=list()
+      k=1
+    }
+    
+    
+    # final download 
+    for (i in 1:length(files)){
+      
+      for (j in files[[i]]){
+        nameF = sub(".csv","",j)
+        if(grepl("demog|qof",j)){
+          sepCsv = ";"
+        }else{
+          sepCsv =","
+        }
+        assign(sub(".csv","",j),data.table(read.csv(text = RCurl::getURL(paste0(url,inFolderFinal[i],j )),sep = sepCsv),stringsAsFactors = FALSE))
+        
+        out[k] = mget(c(nameF))
+        names(out)[k] = nameF
+        k=k+1
+        
+      }
+    }
+  }
+  out[which(grepl("plpd",names(out)))][[1]][,X:=NULL]
+  return(out)
+  
+}
+
