@@ -110,7 +110,11 @@ monthlyData_download = function(settings, whichData = "all"){
       suppressWarnings(dir.create(paste0(dirs$plpdRootDir,folder),recursive = T))
       
       # create the temporary file
-      td=paste0(Sys.getenv("TEMP"),"\\PrescRtemp")
+      if(Sys.getenv("TEMP")!=""){
+        td=paste0(Sys.getenv("TEMP"),"\\PrescRtemp")
+      }else{
+        td=paste0(getwd(),"/PrescRtemp")
+      }
       on.exit(unlink(td))
       tf = tempfile(tmpdir = td,fileext = ".zip")
       if(!dir.exists(td)){
