@@ -12,6 +12,7 @@
 ##' @import magrittr
 ##' @import rmarkdown
 ##' @import ggplot2
+##' @import reactable
 ##' @import prettydoc
 ##' @importFrom dplyr group_by_at summarise mutate select
 ##' @importFrom RCurl getURL

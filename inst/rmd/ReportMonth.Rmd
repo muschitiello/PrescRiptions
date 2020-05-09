@@ -1,20 +1,28 @@
 ---
-title: "England Report - *`r params$monthTitle`* "
+title: "**England Report** - ***`r params$monthTitle`*** "
 subtitle: "**PrescRiptions**"
-author: Cristina Muschitiello - Niccolò Stamboglis
-pagetitle: "Report `r params$monthTitle`"
-date: "e-Rum2020 - 20th June 2020"
+author: "Authors: *Cristina Muschitiello* - *Niccolò Stamboglis*"
+pagetitle: "PrescRiptions Report `r params$monthTitle`"
+date: "**e-Rum2020** - 20th June 2020"
 output:
-    prettydoc::html_pretty:
-      theme: architect
-      highlight: github
-      df_print: paged
-      toc: true
-      toc_depth: 4
-      toc_float:
-        collapsed: true
-        smooth_scroll: true
-      number_sections: false
+  html_document:
+    df_print: paged
+    toc: true
+    toc_depth: 4
+    toc_float: 
+      collapsed: true
+      smooth_scroll: true
+    number_sections: false
+  fig_caption: true
+  includes:
+    in_header: header.tex
+  keep_tex: true
+  pandoc_args: --tab-stop=2
+  bookdown::pdf_book:
+    df_print: paged
+    toc: true
+    toc_depth: 4
+    number_sections: false
 params:
   year: year,
   month: month,
@@ -55,11 +63,13 @@ bnfPrescriptions = PrescRiptions::generateSummaries(plpd,bnf,on = "BNF",params$s
 
 
 ```
-## Description
+# **Basic information**
+
+### *Description*
 
 This report provides summary information on prescriptions provided in `r params$geoArea ` during `r params$monthTitle `. This report is generated automatically using the package **PrescRiptions**.
 
-### Summary
+### *Summary*
 
 In `r params$geoArea` during `r params$monthTitle ` the following numbers were registered:
 
@@ -71,20 +81,75 @@ knitr::kable(regionPrescriptions,
                 ,bootstrap_options = c("hold_position", "repeat_header","striped", "hover", "condensed", "responsive")
   ) 
 ```
-### Summary by BNF Code
+
+# **Analysis by BNF Code**
+
+This section provides information on prescriptions organised by BNF code.
+
+### *Prescribed items*
 
 Information on individual BNF codes can be summarised as follows.
 
-**Prescribed items**
-
-Prescribed items are divided by BNF code as follows
+**Prescribed items by BNF code** are distributed by BNF code as follows
 
 ```{r, echo=FALSE, fig.width=8, fig.height=6}
-# p <- ggplot(DF_Summary_BNF_Code_Month, aes(x=reorder(BNF.Chapter, -ITEMS), y=ITEMS)) + 
-#   geom_bar(stat="identity", width=.5, fill="tomato3") + 
-#   labs(title="Items by BNF Chapter", 
-#        subtitle="England", 
-#        caption="source: NHS") + 
-#   theme(axis.text.x = element_text(angle=65, vjust=0.6))
-# p
+
+
+p <- ggplot(bnfPrescriptions, aes(x=reorder(BNF.Chapter, -ITEMS), y=ITEMS)) +
+  geom_bar(stat="identity", width=.5, fill="tomato3") +
+  labs(title="Items by BNF Chapter",
+       subtitle="England",
+       caption="source: NHS") +
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+p
+
 ```
+
+### *Actual Costs*
+
+**Actual costs by BNF code** are distributed by BNF code as follows
+
+```{r, echo=FALSE, fig.width=8, fig.height=6}
+p <- ggplot(bnfPrescriptions, aes(x=reorder(BNF.Chapter, -ACT.COST), y=ACT.COST)) + 
+  geom_bar(stat="identity", width=.5, fill="tomato3") + 
+  labs(title="Actual costs by BNF Chapter", 
+       subtitle="England", 
+       caption="source: NHS") + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+p
+```
+
+
+### *Prescribed quantity*
+
+**Total prescribed quantity by BNF code** are distributed by BNF code as follows
+
+```{r, echo=FALSE, fig.width=8, fig.height=6}
+p <- ggplot(bnfPrescriptions, aes(x=reorder(BNF.Chapter, -QUANTITY), y=QUANTITY)) + 
+  geom_bar(stat="identity", width=.5, fill="tomato3") + 
+  labs(title="Total quantity by BNF Chapter", 
+       subtitle="England", 
+       caption="source: NHS") + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+p
+```
+
+
+### *Summary table*
+
+The information on prescription by BNF chapter are summarised in the following table
+
+```{r, echo=FALSE, fig.width=8, fig.height=6}
+
+reactable(bnfPrescriptions[,1:5], paginationType = "jump", defaultPageSize = 6)
+
+```
+
+
+
+
+## Data source
+
+Information on prescriptions have been obtained from NHS. Additional information on prescriptions can be found at this website https://digital.nhs.uk/data-and-information/publications/statistical/practice-level-prescribing-data.
+
+All information are made available via the PrescRiption package.

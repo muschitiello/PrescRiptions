@@ -34,7 +34,7 @@ renderMonthlyReport = function(settings,monthData) {
   
   render(
     system.file("rmd",input="ReportMonth.Rmd",package = "PrescRiptions"), 
-    output_format = prettydoc::html_pretty("architect"),
+    output_format = "html_document",
     output_dir = folderOut,
     params = list(
       year = year,

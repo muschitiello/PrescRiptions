@@ -200,7 +200,7 @@ timeSeries_generate = function(from = "mm/yyyy", to = "mm/yyyy", settings = NULL
       message(paste0("Time series: ",
                      "regionTs_",fromDate,"_",toDate,"csv \n ",
                      "bnfTS_",fromDate,"_",toDate,"csv \n",
-                     "saved in ",settings$rootdir,"timeSeries/" ))
+                     "saved in ",settings$rootdir,"/timeSeries/" ))
       
     }
     

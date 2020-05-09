@@ -9,7 +9,7 @@
 dirsGen = function(settings){
   rootdir = settings$rootdir
   inputdir = paste0(rootdir,"/dataInput/")
-  outputDir = paste0(rootdir,"/output/")
+  outputDir = paste0(rootdir,"/reports/")
   timeSeriesDir = paste0(rootdir,"/timeSeries/")
   plpdRootDir = paste0(inputdir,"01_plpd/")
   bnfRootDir = paste0(inputdir,"02_bnf/")
