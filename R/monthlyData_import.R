@@ -259,7 +259,11 @@ monthlyData_import = function(settings,whichData = "all",sample=TRUE){
       }
     }
   }
-  out[which(grepl("plpd",names(out)))][[1]][,X:=NULL]
+  
+  if(any(grepl("plpd",names(out)))){
+    out[which(grepl("plpd",names(out)))][[1]][,X:=NULL]
+  }
+  
   return(out)
   
 }
