@@ -21,4 +21,4 @@ NULL
 utils::globalVariables(c("plpd","chem","plpdFiles","addr","td",
                          "PERIOD","ITEMS","NIC","ACT.COST",
                          "QUANTITY","ONS_CCG_CODE","PRACTICE","EXTRACT_DATE",
-                         "PUBLICATION","settings","Var1","Var2","yyyy","mm","BNF.Chapter"))
+                         "PUBLICATION","settings","Var1","Var2","yyyy","mm","BNF.Chapter","X"))
