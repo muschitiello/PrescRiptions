@@ -13,8 +13,8 @@
 ##' @import rmarkdown
 ##' @import ggplot2
 ##' @import reactable
-##' @import scales
 ##' @importFrom dplyr group_by_at summarise mutate select
+##' @importFrom scales unit_format
 ##' @importFrom RCurl getURL
 NULL
 
