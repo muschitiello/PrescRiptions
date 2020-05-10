@@ -1,11 +1,13 @@
 ---
-title: "**England Report** - ***`r params$monthTitle`*** "
+title: <span style="color:#E95420">**England Report** - ***`r params$monthTitle`***</span>
 subtitle: "**PrescRiptions**"
 author: "Authors: *Cristina Muschitiello* - *Niccolò Stamboglis*"
 pagetitle: "PrescRiptions Report `r params$monthTitle`"
 date: "**e-Rum2020** - 20th June 2020"
 output:
   html_document:
+    theme: united
+    highlight: default
     df_print: paged
     toc: true
     toc_depth: 4
@@ -18,11 +20,11 @@ output:
     in_header: header.tex
   keep_tex: true
   pandoc_args: --tab-stop=2
-  bookdown::pdf_book:
-    df_print: paged
-    toc: true
-    toc_depth: 4
-    number_sections: false
+  # bookdown::pdf_book:
+  #   df_print: paged
+  #   toc: true
+  #   toc_depth: 4
+  #   number_sections: false
 params:
   year: year,
   month: month,
@@ -46,9 +48,10 @@ header-includes:
 ---
 
 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-theme_set(theme_economist()) # Sets graphs themes to "The Economist" style
+ggplot2::theme_set(ggthemes::theme_economist()) # Sets graphs themes to "The Economist" style
 ```
 
 ```{r dataImport, include=FALSE, echo=FALSE}
@@ -73,9 +76,15 @@ This report provides summary information on prescriptions provided in `r params$
 
 In `r params$geoArea` during `r params$monthTitle ` the following numbers were registered:
 
+
 ```{r table1,  include=TRUE}
 
-knitr::kable(regionPrescriptions,
+numCols = colnames(regionPrescriptions)
+
+data.table::setDT(regionPrescriptions)[, (numCols):= lapply(.SD, function(x) format(x,big.mark = ".",decimal.mark = ",",scientific = FALSE)),
+              .SDcols = numCols]
+
+knitr::kable(regionPrescriptions,format = "html",
              caption = "Region Numbers") %>%
   kableExtra::kable_styling(latex_options = c("hold_position", "repeat_header","striped")
                 ,bootstrap_options = c("hold_position", "repeat_header","striped", "hover", "condensed", "responsive")
@@ -98,9 +107,15 @@ Information on individual BNF codes can be summarised as follows.
 p <- ggplot(bnfPrescriptions, aes(x=reorder(BNF.Chapter, -ITEMS), y=ITEMS)) +
   geom_bar(stat="identity", width=.5, fill="tomato3") +
   labs(title="Items by BNF Chapter",
-       subtitle="England",
-       caption="source: NHS") +
-  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+       subtitle="England", 
+       caption="source: NHS",
+       x="BNF.Chapter") + 
+  scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 20))+
+   scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))+
+  theme(axis.text.x = element_text(size=9,angle=90, vjust=0.4, hjust=1))+
+  theme(axis.text.y = element_text(size=9,vjust=0.4, hjust=1))+
+  theme(axis.title.x = element_text(margin=margin(10,10,0,0)))+
+  theme(axis.title.y = element_text(margin=margin(10,10,10,0)))
 p
 
 ```
@@ -114,8 +129,14 @@ p <- ggplot(bnfPrescriptions, aes(x=reorder(BNF.Chapter, -ACT.COST), y=ACT.COST)
   geom_bar(stat="identity", width=.5, fill="tomato3") + 
   labs(title="Actual costs by BNF Chapter", 
        subtitle="England", 
-       caption="source: NHS") + 
-  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+       caption="source: NHS",
+       x="BNF.Chapter") + 
+  scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 20))+
+   scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))+
+  theme(axis.text.x = element_text(size=9,angle=90, vjust=0.4, hjust=1))+
+  theme(axis.text.y = element_text(size=9,vjust=0.4, hjust=1))+
+  theme(axis.title.x = element_text(margin=margin(10,10,0,0)))+
+  theme(axis.title.y = element_text(margin=margin(10,10,10,0)))
 p
 ```
 
@@ -129,8 +150,14 @@ p <- ggplot(bnfPrescriptions, aes(x=reorder(BNF.Chapter, -QUANTITY), y=QUANTITY)
   geom_bar(stat="identity", width=.5, fill="tomato3") + 
   labs(title="Total quantity by BNF Chapter", 
        subtitle="England", 
-       caption="source: NHS") + 
-  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+       caption="source: NHS",
+       x="BNF.Chapter") + 
+  scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 20))+
+   scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))+
+  theme(axis.text.x = element_text(size=9,angle=90, vjust=0.4, hjust=1))+
+  theme(axis.text.y = element_text(size=9,vjust=0.4, hjust=1))+
+  theme(axis.title.x = element_text(margin=margin(10,10,0,0)))+
+  theme(axis.title.y = element_text(margin=margin(10,10,10,0)))
 p
 ```
 
@@ -140,12 +167,25 @@ p
 The information on prescription by BNF chapter are summarised in the following table
 
 ```{r, echo=FALSE, fig.width=8, fig.height=6}
+numCols = colnames(bnfPrescriptions)
 
-reactable(bnfPrescriptions[,1:5], paginationType = "jump", defaultPageSize = 6)
+data.table::setDT(bnfPrescriptions)[, (numCols):= lapply(.SD, function(x) format(x,big.mark = ".",decimal.mark = ",",scientific = FALSE)),
+              .SDcols = numCols]
+
+# reactable(bnfPrescriptions[,1:5], paginationType = "jump", defaultPageSize = 6)
 
 ```
 
+<!-- seconda opzione tabella -->
 
+```{r table2,  include=TRUE}
+
+knitr::kable(bnfPrescriptions[,1:5],format = "html") %>%
+  kableExtra::kable_styling(latex_options = c("hold_position", "repeat_header","striped")
+                ,bootstrap_options = c("hold_position", "repeat_header","striped", "hover", "condensed", "responsive")
+  ) %>%
+   kableExtra::scroll_box(height = "350px")
+```
 
 
 ## Data source

@@ -13,7 +13,7 @@
 ##' @import rmarkdown
 ##' @import ggplot2
 ##' @import reactable
-##' @import prettydoc
+##' @import scales
 ##' @importFrom dplyr group_by_at summarise mutate select
 ##' @importFrom RCurl getURL
 NULL
