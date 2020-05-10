@@ -84,10 +84,11 @@ numCols = colnames(regionPrescriptions)
 data.table::setDT(regionPrescriptions)[, (numCols):= lapply(.SD, function(x) format(x,big.mark = ".",decimal.mark = ",",scientific = FALSE)),
               .SDcols = numCols]
 
-knitr::kable(regionPrescriptions,format = "html",
+knitr::kable(t(regionPrescriptions[,2:5]),format = "html",
              caption = "Region Numbers") %>%
   kableExtra::kable_styling(latex_options = c("hold_position", "repeat_header","striped")
-                ,bootstrap_options = c("hold_position", "repeat_header","striped", "hover", "condensed", "responsive")
+                ,bootstrap_options = c("hold_position", "repeat_header","striped", "hover", "condensed", "responsive"),
+                full_width = F, position = "left"
   ) 
 ```
 
