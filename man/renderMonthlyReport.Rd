@@ -4,12 +4,18 @@
 \alias{renderMonthlyReport}
 \title{renderMonthlyReport}
 \usage{
-renderMonthlyReport(settings, monthData)
+renderMonthlyReport(settings, monthData, ccg = NULL, gp = NULL, sample = F)
 }
 \arguments{
 \item{settings}{settings with parameters}
 
 \item{monthData}{list with all data for month, as returded by \emph{monthlyData_import()}}
+
+\item{ccg}{CCG to run the analysis and the report for}
+
+\item{gp}{GP to run the analysis and the report for}
+
+\item{sample}{if sample data have been used, use this for making a message appearing in the report.}
 }
 \value{
 The function generates a html file

@@ -200,6 +200,10 @@ monthlyData_import = function(settings,whichData = "all",sample=TRUE){
     }
   }
   
+  if(any(grepl("demogMap",names(out)))){
+    out[which(grepl("demogMap",names(out)))][[1]]=checkDemogMap(out[which(grepl("demogMap",names(out)))][[1]],settings)
+  }
+
   return(out)
   
 }

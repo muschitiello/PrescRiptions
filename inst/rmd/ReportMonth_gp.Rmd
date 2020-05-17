@@ -81,7 +81,8 @@ ccg_aggr= ccgSum$ccg_aggr %>%
 mutate(NIC_RATE_Z_TYPE=ifelse(NIC_RATE_Z < -1, "Cost Below Average", ifelse(NIC_RATE_Z < 1, "Average Cost", "Cost Above Average"))) %>%
 data.table
 
-# 
+# ccg_aggr[ONS_CCG_CODE == params$selccg,NIC_RATE_Z_TYPE:="Cost for selected CCG"]
+
 # ccg_summaryC = ccg_summary %>%
 #   dplyr::filter(ONS_CCG_CODE == params$selccg) %>%
 #   data.table
@@ -97,50 +98,50 @@ data.table
 # GPs
 
 gpSum = gpSummaries(plpd,demog,demogMap,params$settings)
-# 
-# gpSumC = gpSum %>%
-#   dplyr::filter(PRACTICE == params$selgp)%>%
-#   data.table
+
+gpSumC = gpSum %>%
+  dplyr::filter(PRACTICE == params$selgp)%>%
+  data.table
 
 gpSum[,NIC_RATE := round(NIC_RATE,2)]
 gpCostlier = gpSum[NIC_RATE_Z >2,2:8]
-# 
-# gpSumT = copy(gpSum)
-# 
-# data.table::setDT(gpSumT)[, (colnames(gpSumT)):= lapply(.SD, function(x) format(x,big.mark = ".",decimal.mark = ",",scientific = FALSE)),
-#                          .SDcols = colnames(gpSumT)]
-# 
-# 
-# gpC = plpd[PRACTICE == params$selgp]
-# gpC[,REGION:="Practice"]
-# # bnf[,BNF.Presentation.Code:=as.character(BNF.Presentation.Code)]
-# gpC = data.table(left_join(gpC, bnf, by = c("BNF.CODE" = "BNF.Presentation.Code")))
-# 
-# groupVar3 <- c("PERIOD", "PRACTICE")
-# measures <- c("ITEMS","NIC", "ACT.COST", "QUANTITY", "PERIOD", "PRACTICE", "BNF.CODE" )
-# 
-# gpCsum <-  gpC %>%
-#   dplyr::select(PERIOD,all_of(measures)) %>%
-#   dplyr::group_by_at(groupVar3) %>%
-#   dplyr::summarise(ITEMS = sum(ITEMS), NIC = sum(NIC), ACT.COST = sum(ACT.COST), QUANTITY = sum(QUANTITY))%>%
-#   data.table 
-# 
-# groupVar2 <- c("PERIOD", "PRACTICE", "BNF.Chapter")
-# 
-# gpCsumCode <-  gpC %>%
-#   dplyr::select(PERIOD,all_of(measures), BNF.Chapter, BNF.Chapter.Code) %>%
-#   dplyr::group_by_at(groupVar2) %>%
-#   dplyr::summarise(ITEMS = sum(ITEMS), NIC = sum(NIC), ACT.COST = sum(ACT.COST), QUANTITY = sum(QUANTITY))%>%
-#   data.table 
-# 
-# 
-# gpSum = gpSum[!is.na(NIC_RATE_Z)]
-# gpSum = gpSum %>%
-#   mutate(NIC_RATE_Z=scale(NIC_RATE)[,]) %>%
-# mutate(NIC_RATE_Z_TYPE=ifelse(NIC_RATE_Z < -1, "Cost Below Average", ifelse(NIC_RATE_Z < 1, "Average Cost", "Cost Above Average"))) %>%
-#   data.table
-# 
-# gpSum[PRACTICE==params$selgp,NIC_RATE_Z_TYPE:="Cost for selected GP"]
+
+gpSumT = copy(gpSum)
+
+data.table::setDT(gpSumT)[, (colnames(gpSumT)):= lapply(.SD, function(x) format(x,big.mark = ".",decimal.mark = ",",scientific = FALSE)),
+                         .SDcols = colnames(gpSumT)]
+
+
+gpC = plpd[PRACTICE == params$selgp]
+gpC[,REGION:="Practice"]
+# bnf[,BNF.Presentation.Code:=as.character(BNF.Presentation.Code)]
+gpC = data.table(left_join(gpC, bnf, by = c("BNF.CODE" = "BNF.Presentation.Code")))
+
+groupVar3 <- c("PERIOD", "PRACTICE")
+measures <- c("ITEMS","NIC", "ACT.COST", "QUANTITY", "PERIOD", "PRACTICE", "BNF.CODE" )
+
+gpCsum <-  gpC %>%
+  dplyr::select(PERIOD,all_of(measures)) %>%
+  dplyr::group_by_at(groupVar3) %>%
+  dplyr::summarise(ITEMS = sum(ITEMS), NIC = sum(NIC), ACT.COST = sum(ACT.COST), QUANTITY = sum(QUANTITY))%>%
+  data.table 
+
+groupVar2 <- c("PERIOD", "PRACTICE", "BNF.Chapter")
+
+gpCsumCode <-  gpC %>%
+  dplyr::select(PERIOD,all_of(measures), BNF.Chapter, BNF.Chapter.Code) %>%
+  dplyr::group_by_at(groupVar2) %>%
+  dplyr::summarise(ITEMS = sum(ITEMS), NIC = sum(NIC), ACT.COST = sum(ACT.COST), QUANTITY = sum(QUANTITY))%>%
+  data.table 
+
+
+gpSum = gpSum[!is.na(NIC_RATE_Z)]
+gpSum = gpSum %>%
+  mutate(NIC_RATE_Z=scale(NIC_RATE)[,]) %>%
+mutate(NIC_RATE_Z_TYPE=ifelse(NIC_RATE_Z < -1, "Cost Below Average", ifelse(NIC_RATE_Z < 1, "Average Cost", "Cost Above Average"))) %>%
+  data.table
+
+gpSum[PRACTICE==params$selgp,NIC_RATE_Z_TYPE:="Cost for selected GP"]
 
 Sys.setlocale("LC_TIME", "English")
 
@@ -157,7 +158,7 @@ It is composed of the following sections:
 
   + **Report By Region**: <span style="background-color:#00FFFF"> ***`r params$geoArea ` - `r params$monthTitle `*** </span>: Summary section for the Region.
 
-NO CUSTOMISED PARAMETERS HAVE BEEN SELECTED FOR THIS REPORT
+  + **Report By GP (customised section)**:  <span style="background-color:#33ff33"> *GP `r params$selgp`-`r params$monthTitle `*</span>: customised section by GP.
 
 `r if(sample){print("!! The document is based on a sample of 500.000 rows from plpd data")}`
 
@@ -280,6 +281,8 @@ scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 20))+
   theme(axis.title.y = element_text(margin=margin(10,10,10,0),color="#333333"))
 p
 ```
+
+
 ## **Costs summary by CCG **
 
 This section analyses Net Ingredient Costs per 1K patients in <span style="background-color:#00FFFF">*`r params$geoArea`-`r params$monthTitle `*</span>. Cost analysis might be useful to the NHS for cost-containment.
@@ -335,6 +338,148 @@ knitr::kable(gpCostlier,format = "html",
 }
 ```
 
+<span style="color:#E95420">------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+
+# ***Report by GP (customised section)*** 
+<span style="background-color:#33ff33"> <font size="5">***`r params$selgp` - `r params$monthTitle`*** </font></span>
+
+## **Summary**
+
+```{r,  include=TRUE}
+
+numCols = colnames(gpSumC)
+
+gpSumCT = copy(gpSumC)
+
+data.table::setDT(gpSumCT)[, (numCols):= lapply(.SD, function(x) format(x,big.mark = ".",decimal.mark = ",",scientific = FALSE)),
+              .SDcols = numCols]
+
+knitr::kable(t(gpSumCT[,3:6]),format = "html",
+             caption = paste0("GP ",params$selgp, " - Summary information")) %>%
+  kableExtra::kable_styling(latex_options = c("hold_position", "repeat_header","striped")
+                ,bootstrap_options = c("hold_position", "repeat_header","striped", "hover", "condensed", "responsive"),
+                full_width = F, position = "left"
+  ) 
+```
+
+## **Analysis by BNF Code**
+
+### *Summary table* 
+
+The information on prescription at <span style="background-color:#33ff33"> *GP `r params$selgp`-`r params$monthTitle `*</span> level by BNF chapter are summarised in the following table
+
+```{r, echo=FALSE, fig.width=8, fig.height=6}
+numCols = colnames(gpCsumCode)
+
+gpCsumCodeT = copy(gpCsumCode)
+
+data.table::setDT(gpCsumCodeT)[, (numCols):= lapply(.SD, function(x) format(x,big.mark = ".",decimal.mark = ",",scientific = FALSE)),
+              .SDcols = numCols]
+
+knitr::kable(gpCsumCodeT[,3:7],format = "html",caption = paste0("GP ",params$selgp, " - ",params$monthTitle, " by BNF Chapter")) %>%
+  kableExtra::kable_styling(latex_options = c("hold_position", "repeat_header","striped")
+                ,bootstrap_options = c("hold_position", "repeat_header","striped", "hover", "condensed", "responsive")
+  ) %>%
+   kableExtra::scroll_box(height = "350px")
+
+```
+### *Prescribed items*
+
+**Prescribed items by BNF code** for <span style="background-color:#33ff33"> *GP `r params$selgp`-`r params$monthTitle `*</span> are distributed as follows
+
+```{r, echo=FALSE, fig.width=8, fig.height=6}
+
+p <- ggplot(gpCsumCode, aes(x=reorder(BNF.Chapter, -ITEMS), y=ITEMS)) +
+  geom_bar(stat="identity", width=.5, fill="#E95420") +
+  labs(title=paste0("Items by BNF Chapter - ","GP ",params$selgp, " - ",params$monthTitle),
+       # subtitle=paste0("CCG ",params$selccg), 
+       caption="source: NHS",
+       x="BNF.Chapter") + 
+    theme(plot.title = element_text(color="#333333"))+
+scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 20))+
+   scale_y_continuous()+
+  theme(axis.text.x = element_text(size=9,angle=90, vjust=0.4, hjust=1,color="#333333"))+
+  theme(axis.text.y = element_text(size=9,vjust=0.4, hjust=1,color="#333333"))+
+  theme(axis.title.x = element_text(margin=margin(10,10,0,0),color="#333333"))+
+  theme(axis.title.y = element_text(margin=margin(10,10,10,0),color="#333333"))
+p
+
+```
+
+### *Actual Costs*
+
+**Actual costs by BNF code** for <span style="background-color:#33ff33"> *GP `r params$selgp`-`r params$monthTitle `*</span> are distributed as follows
+
+```{r, echo=FALSE, fig.width=8, fig.height=6}
+p <- ggplot(gpCsumCode, aes(x=reorder(BNF.Chapter, -ACT.COST), y=ACT.COST)) + 
+  geom_bar(stat="identity", width=.5, fill="#E95420") + 
+  labs(title=paste0("Actual costs by BNF Chapter - ","GP ",params$selgp, " - ",params$monthTitle),
+       # subtitle="England", 
+       caption="source: NHS",
+       x="BNF.Chapter") + 
+    theme(plot.title = element_text(color="#333333"))+
+scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 20))+
+   scale_y_continuous()+
+  theme(axis.text.x = element_text(size=9,angle=90, vjust=0.4, hjust=1,color="#333333"))+
+  theme(axis.text.y = element_text(size=9,vjust=0.4, hjust=1,color="#333333"))+
+  theme(axis.title.x = element_text(margin=margin(10,10,0,0),color="#333333"))+
+  theme(axis.title.y = element_text(margin=margin(10,10,10,0),color="#333333"))
+p
+```
+
+### *Prescribed quantity*
+
+**Total prescribed quantity by BNF code** for <span style="background-color:#33ff33"> *GP `r params$selgp`-`r params$monthTitle `*</span> are distributed as follows
+
+```{r, echo=FALSE, fig.width=8, fig.height=6}
+p <- ggplot(gpCsumCode, aes(x=reorder(BNF.Chapter, -QUANTITY), y=QUANTITY)) + 
+  geom_bar(stat="identity", width=.5, fill="#E95420") + 
+  labs(title=paste0("Total quantity by BNF Chapter - ","GP ",params$selgp, " - ",params$monthTitle),
+       # subtitle="England", 
+       caption="source: NHS",
+       x="BNF.Chapter") + 
+    theme(plot.title = element_text(color="#333333"))+
+scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 20))+
+   scale_y_continuous()+
+  theme(axis.text.x = element_text(size=9,angle=90, vjust=0.4, hjust=1))+
+  theme(axis.text.y = element_text(size=9,vjust=0.4, hjust=1))+
+  theme(axis.title.x = element_text(margin=margin(10,10,0,0)))+
+  theme(axis.title.y = element_text(margin=margin(10,10,10,0)))
+p
+```
+
+## **Cost analysis**
+
+
+The average NIC per 1K patients in the <span style="background-color:#33ff33"> *GP `r params$selgp`-`r params$monthTitle `*</span> is **`r round(gpSumC$NIC_RATE,2)`**. This value set the GP at the **`r names(which(gpSumC$NIC_RATE < quantile(gpSum$NIC_RATE, probs = seq(0, 1, by= 0.1)))[1])`** percentile of the CCG distribution for this indicator.
+
+The figure below provides a graphical comparison of the CCG costs benchmarked with other CCG rates.
+
+```{r, echo=FALSE, fig.width=8, fig.height=6}
+ggplot(gpSum, aes(x= NIC_RATE, y= reorder(PRACTICE, NIC_RATE))) +
+  geom_point(stat='identity', aes(col=NIC_RATE_Z_TYPE), size=2) +
+  scale_color_manual(
+    # labels = c("Cost Above Average", "Average Cost", "Cost Below Average","Cost for selected GP"),
+    values = c("Cost Below Average"="#33ff33", "Average Cost"="#ffef00", "Cost Above Average" = "#E95420","Cost for selected GP" = "#00ffff")) +
+  coord_flip()+
+  ggtitle(paste0("Costs per 1K patients - GP ",params$selgp)) +
+    theme(plot.title = element_text(color="#333333"))+
+xlab("NIC per 1K patients") +
+  ylab( "Practice") +
+  theme(axis.text.x = element_blank())+
+  theme(axis.text.y = element_text(size=9,vjust=0.4, hjust=1,color="#333333"))+
+  theme(axis.ticks.x =element_blank())+
+  # theme(axis.line.x =element_blank())+
+  theme(axis.title.x = element_text(margin=margin(10,10,0,0),color="#333333"))+
+  theme(axis.title.y = element_text(margin=margin(10,10,10,0),color="#333333"))+
+  theme(legend.position = "bottom")+
+  theme(legend.title = element_blank())+
+  theme(legend.text = element_text(size=9,color="#333333"))+
+  geom_point(data=gpSumC , aes(x=NIC_RATE, y=PRACTICE), colour="#00FFFF", size=3)+
+  geom_text(aes(label=ifelse(PRACTICE == params$selgp,round(NIC_RATE,3),'')),hjust=0,vjust=-0.8,size=3,color="#333333")
+
+
+```
 
 <span style="color:#E95420">------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
 

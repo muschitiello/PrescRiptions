@@ -219,6 +219,12 @@ monthlyData_download = function(settings, whichData = "all"){
             write.csv2(bnf,paste0(dirs$inputdir,outFolderFinal[i],j),row.names = F)
           }
           
+          if(grepl("demogMap",j)){
+            demogMap = read.csv(paste0(dirs$inputdir,outFolderFinal[i],j),sep = ";",stringsAsFactors = FALSE)
+            demogMap=checkDemogMap(demogMap,settings)
+            write.csv2(demogMap,paste0(dirs$inputdir,outFolderFinal[i],j),row.names = F)
+          }
+          
         }
       }
     }
