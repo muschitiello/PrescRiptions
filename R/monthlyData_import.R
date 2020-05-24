@@ -91,7 +91,9 @@ monthlyData_import = function(settings,whichData = "all",sample=TRUE){
       for(j in plpdFiles){
         message(j)
         if(grepl("ADDR|addr",j)){
-          assign(paste0("addr_",prefix),data.table(read.csv(paste0(paste0(dirs$plpdRootDir,folder),"/",j),stringsAsFactors = FALSE)))
+          assign(paste0("addr_",prefix),data.table(read.csv(paste0(paste0(dirs$plpdRootDir,folder),"/",j),stringsAsFactors = FALSE,header = FALSE)))
+          setnames(mget(paste0("addr_",prefix))[[1]],colnames(mget(paste0("addr_",prefix))[[1]]),c("PERIOD","Practice.Code","Practice.Name",
+                   "Address.1","Address.2","Address.3","Address.4","Postcode"))
         }
         if(grepl("CHEM|chem",j)){
           assign(paste0("chem_",prefix),data.table(read.csv(paste0(paste0(dirs$plpdRootDir,folder),"/",j),stringsAsFactors = FALSE)))
