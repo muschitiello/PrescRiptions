@@ -1,14 +1,15 @@
 ##' monthlyData_import
 ##'
-##' import in the workspace plpd, bnf, demog and qof data for the specified month and year as settend in the yml file
+##' import plpd, bnf, demog and qof data in the workspace for the specified month and year as setted with \emph{setConfig()}
 ##'
-##' @param settings analysis settings
+##' @param settings analysis settings generated with \emph{setConfig()}
 ##' @param whichData string indicatin which Data to download. One of "plpd", "bnf", "demog" and "all"
 ##' default = "all"
 ##' @param sample logic. if TRUE (default) only 500.000 rows will be uploaded in the workspace. 
 ##' Added for usage on Rstudio Cloud for teaching/presenting purposes
 ##'
-##' @details Import all data for one month analysis in the workspace. data are imported from the following sources:
+##' @details Import all data for one month analysis in the workspace. If altready downloaded, data are retrived from the folder where they have been downloaded.
+##' If not already downloaded, data are downloaded from:
 ##'  - plpd: website 
 ##'  - bnf: github/csv
 ##'  - demog: github/csv
@@ -17,7 +18,7 @@
 ##' 
 ##' @seealso \code{\link{monthlyData_download}}
 ##' 
-##' @return the function returns all data upoaded in the workspace
+##' @return the function returns all data upoaded in the workspace in list format
 ##' 
 ##' @export
 ##'

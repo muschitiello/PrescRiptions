@@ -15,6 +15,18 @@ setConfig(rootdir, year, month, region)
 
 \item{region}{char. Region of analysis}
 }
+\value{
+The function returns a list containing the following information, as relative to the month and year selected:
+ - rootdir
+ - year
+ - month
+ - region
+ - plpdName
+ - demogName
+ - demogMapName 
+ - bnfName
+ - qofNames
+}
 \description{
 creates a list of configuration settings that will be used across the package
 }

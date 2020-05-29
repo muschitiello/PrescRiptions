@@ -11,8 +11,15 @@ plpdDemogBridge(plpd = NULL, demogMap = NULL, settings = NULL)
 
 \item{demogMap}{demogMap data.table}
 
-\item{settings}{name of settings variable.}
+\item{settings}{analysis settings generated with \emph{setConfig()}}
+}
+\value{
+the function returns a data table composed on 2 columns, one for PRACTICE code and one for CCG code. 
+ Moreover, a message is returned, with the number of unmatched records.
 }
 \description{
-creates summaries at regional level
+links PRACTICE codes and CCG codes
+}
+\details{
+Some records are not matched and this is due to the fact that PRactice level Prescribing data are more "generic" and include also GP that are not mapped by the CCG system.
 }

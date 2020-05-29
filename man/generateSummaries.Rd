@@ -7,14 +7,21 @@
 generateSummaries(plpd, bnf, on = "REGION", settings)
 }
 \arguments{
-\item{plpd}{prescription data.table}
+\item{plpd}{practice level prescribing data.table}
 
 \item{bnf}{bnf data.table}
 
 \item{on}{one of \emph{"REGION"} or \emph{"BNF"} indicating the variables to summarise on. Default is "REGION"}
 
-\item{settings}{analysis settings}
+\item{settings}{analysis settings generated with \emph{setConfig()}}
+}
+\value{
+the function returns a data.table
 }
 \description{
-creates summaries at regional level
+creates costs and quantities aggregates at REGIONAL or BNF level
+}
+\details{
+The function aggregates costs and quantities. The "REGION" version creates total aggregates at region level
+while the "BNF" option produces aggregates at BNF level.
 }

@@ -7,6 +7,17 @@
 ##' @param month numeric. Month of interest
 ##' @param region char. Region of analysis
 ##' 
+##' @return The function returns a list containing the following information, as relative to the month and year selected:
+##'  - rootdir
+##'  - year
+##'  - month
+##'  - region
+##'  - plpdName
+##'  - demogName
+##'  - demogMapName 
+##'  - bnfName
+##'  - qofNames
+##'  
 ##' @export
 
 setConfig <- function(rootdir, year, month, region){

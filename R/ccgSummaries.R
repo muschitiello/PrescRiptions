@@ -1,13 +1,17 @@
 ##' ccgSummaries
 ##'
-##' creates summaries at regional level
+##' creates aggregated values and calclate Cost rates at CCG level
 ##'
-##' @param plpd prescription data.table
+##' @param plpd practice level prescribing data.table
 ##' @param bnf bnf data.table
 ##' @param demog demog data.table
 ##' @param demogMap demogMap data.table
-##' @param settings analysis settings
+##' @param settings analysis settings generated with \emph{setConfig()}
+##' 
+##' @return a summary data.table
+##' 
 ##' @export
+
 
 
 ccgSummaries = function(plpd,bnf,demog,demogMap,settings){

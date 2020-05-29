@@ -1,19 +1,26 @@
 ##' renderMonthlyReport
 ##'
-##' Automatically generates a Markdown pdf report for a single month
+##' Automatically generates a Markdown pdf report for a single month.
 ##'
-##' @param settings settings with parameters
+##' @param settings analysis settings generated with \emph{setConfig()}
 ##' @param monthData list with all data for month, as returded by \emph{monthlyData_import()}
-##' @param ccg CCG to run the analysis and the report for
-##' @param gp GP to run the analysis and the report for
-##' @param sample if sample data have been used, use this for making a message appearing in the report.
+##' @param ccg In case a focus is neded for a specific CCG, the CCG to run the analysis and the report for.
+##' @param gp In case a focus is neded for a specific GP, the GP to run the analysis and the report for
+##' @param sample "YES" (default) or "NO". If sample data have been used, use this for making a message appearing in the report.
 ##' 
-##' @return The function generates a html file
-##' @details If some encoding problem occurs, please set UTF-8 as saving enconding from \emph{File/Save with Encoding...}
+##' @return The function generates an html file.
+##' @details The fucntion generate a monthly report composed of different sections: 
+##'   - Report by Region: summary aggregations at England Level for the selected month.
+##'   - Analysis by BNF codes: aggregations at BNF Code Level for the selected month.
+##'   - Cost Summary by CCG: Net Ingredient cost for 1K patiensts in England for the selected month.
+##'   - Costlier GPs:  list of practices who were in the higher end of the distribution of Net Ingredient Cost per 1K patients 
+##'   - Report by CCG (customised section): aggregation for a single CCG, if selected.
+##'   - Report by GP (customised section): aggregations for a single GP, if selected.
+##'   If some encoding problem occurs, please set UTF-8 as saving enconding from \emph{File/Save with Encoding...}
 ##' @export
 ##' 
 
-renderMonthlyReport = function(settings,monthData,ccg=NULL,gp=NULL,sample=F) {
+renderMonthlyReport = function(settings,monthData,ccg=NULL,gp=NULL,sample="YES") {
 
   dirs = dirsGen(settings)
   year = settings$year

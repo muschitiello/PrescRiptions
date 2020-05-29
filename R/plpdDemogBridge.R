@@ -1,10 +1,16 @@
 ##' plpdDemogBridge
 ##'
-##' creates summaries at regional level
+##' links PRACTICE codes and CCG codes
 ##'
 ##' @param plpd prescription data.table
 ##' @param demogMap demogMap data.table
-##' @param settings name of settings variable.
+##' @param settings analysis settings generated with \emph{setConfig()}
+##' 
+##' @details Some records are not matched and this is due to the fact that PRactice level Prescribing data are more "generic" and include also GP that are not mapped by the CCG system.
+##' 
+##' @return the function returns a data table composed on 2 columns, one for PRACTICE code and one for CCG code. 
+##'  Moreover, a message is returned, with the number of unmatched records. 
+##' 
 ##' @export
 
 

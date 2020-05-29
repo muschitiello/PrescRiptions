@@ -143,6 +143,15 @@ gpCostlier = gpSum[NIC_RATE_Z >2,2:8]
 
 Sys.setlocale("LC_TIME", "English")
 
+if(params$sample=="YES"){
+  dataSample = "SAMPLE PLPD DATA (500.000 ROWS)"
+  m1Sample = "complete data"
+  m2Sample = "SAMPLE = FALSE"
+}else{
+    dataSample = "TOTAL PLPD DATA"
+  m1Sample = "sample data"
+  m2Sample = "SAMPLE = TRUE"
+}
 ```
 <span style="color:#E95420"><font size="5">Authors: *Cristina Muschitiello* - *Niccolò Stamboglis*</font></span>
 
@@ -158,7 +167,7 @@ It is composed of the following sections:
 
   + **Report By CCG (customised section)**:  <span style="background-color:#ffef00"> *CCG `r params$selccg`-`r params$monthTitle `*</span>: customised Section by CCG.
 
-`r if(sample){print("!! The document is based on a sample of 500.000 rows from plpd data")}`
+**All the analyses have been run on <span style="color:#E95420">`r dataSample `</span>. For `r m1Sample ` data, set** ***`r m2Sample `*** **in the** ***monthlyDataImport()*** **function**.
 
 <span style="color:#E95420">------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
 

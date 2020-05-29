@@ -7,7 +7,7 @@
 monthlyData_import(settings, whichData = "all", sample = TRUE)
 }
 \arguments{
-\item{settings}{analysis settings}
+\item{settings}{analysis settings generated with \emph{setConfig()}}
 
 \item{whichData}{string indicatin which Data to download. One of "plpd", "bnf", "demog" and "all"
 default = "all"}
@@ -16,13 +16,14 @@ default = "all"}
 Added for usage on Rstudio Cloud for teaching/presenting purposes}
 }
 \value{
-the function returns all data upoaded in the workspace
+the function returns all data upoaded in the workspace in list format
 }
 \description{
-import in the workspace plpd, bnf, demog and qof data for the specified month and year as settend in the yml file
+import plpd, bnf, demog and qof data in the workspace for the specified month and year as setted with \emph{setConfig()}
 }
 \details{
-Import all data for one month analysis in the workspace. data are imported from the following sources:
+Import all data for one month analysis in the workspace. If altready downloaded, data are retrived from the folder where they have been downloaded.
+If not already downloaded, data are downloaded from:
  - plpd: website 
  - bnf: github/csv
  - demog: github/csv

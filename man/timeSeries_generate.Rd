@@ -17,15 +17,19 @@ timeSeries_generate(
 
 \item{to}{end date in the format "mm-yyyy"}
 
-\item{settings}{name of settings variable.}
+\item{settings}{analysis settings generated with \emph{setConfig()}}
 
 \item{on}{one of \emph{"REGION"}, \emph{"BNF"} and \emph{"BOTH"} indicating which ts to produce,
 default = "BOTH"}
 
 \item{save}{logic, if TRUE, an external file will be saved in rootdir. Default = TRUE}
 }
+\value{
+The function returns a data.table with time series data for the selected period, as generated, in the time range selected, 
+ via  \emph{generateSummaries()}
+}
 \description{
-generate Time series for plpd and bnf data
+generate Time series for regional and bnf data
 }
 \details{
 The function summaries plpd or bnf data on ITEMS, NIC, ACT.COST, QUANTITY and REGION

@@ -1,11 +1,15 @@
 ##' generateSummaries
 ##'
-##' creates summaries at regional level
+##' creates costs and quantities aggregates at REGIONAL or BNF level
 ##'
-##' @param plpd prescription data.table
+##' @param plpd practice level prescribing data.table
 ##' @param bnf bnf data.table
 ##' @param on one of \emph{"REGION"} or \emph{"BNF"} indicating the variables to summarise on. Default is "REGION"
-##' @param settings analysis settings
+##' @param settings analysis settings generated with \emph{setConfig()}
+##' 
+##' @details The function aggregates costs and quantities. The "REGION" version creates total aggregates at region level
+##' while the "BNF" option produces aggregates at BNF level.
+##' @return the function returns a data.table
 ##' @export
 
 

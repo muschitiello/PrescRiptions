@@ -1,15 +1,17 @@
 ##' timeSeries_generate
 ##'
-##' generate Time series for plpd and bnf data
+##' generate Time series for regional and bnf data
 ##'
 ##' @param from start date in the format "mm-yyyy"
 ##' @param to end date in the format "mm-yyyy"
-##' @param settings name of settings variable.
+##' @param settings analysis settings generated with \emph{setConfig()}
 ##' @param on one of \emph{"REGION"}, \emph{"BNF"} and \emph{"BOTH"} indicating which ts to produce,
 ##' default = "BOTH"
 ##' @param save logic, if TRUE, an external file will be saved in rootdir. Default = TRUE
 ##' @details The function summaries plpd or bnf data on ITEMS, NIC, ACT.COST, QUANTITY and REGION
 ##' and generates TS over the period of time indicated trought the \emph{from} and \emph{to} arguments
+##' @return The function returns a data.table with time series data for the selected period, as generated, in the time range selected, 
+##'  via  \emph{generateSummaries()}
 ##' @export
 
 

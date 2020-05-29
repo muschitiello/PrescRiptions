@@ -7,8 +7,13 @@
 dirsGen(settings)
 }
 \arguments{
-\item{settings}{settings where to take the root dir}
+\item{settings}{setting object created via \emph{setConfig()} function containing paths, month and year of analysis and file names.}
+}
+\value{
+The function does not return anything but creates paths under the rootPath specified in the settings object.
+ -
 }
 \description{
-generate directories to be used in the package
+Reads paths and parameters from Settings and creates directories 
+that will be used in the package for storing data and outputs
 }

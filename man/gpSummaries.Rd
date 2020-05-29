@@ -7,14 +7,17 @@
 gpSummaries(plpd, demog, demogMap, settings)
 }
 \arguments{
-\item{plpd}{prescription data.table}
+\item{plpd}{practice level prescribing data.table}
 
 \item{demog}{demog data.table}
 
 \item{demogMap}{demogMap data.table}
 
-\item{settings}{analysis settings}
+\item{settings}{analysis settings generated with \emph{setConfig()}}
+}
+\value{
+a summary data.table
 }
 \description{
-creates summaries at regional level
+creates aggregated values and calclate Cost rates at GP level
 }
