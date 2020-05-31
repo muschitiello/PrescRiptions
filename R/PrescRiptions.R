@@ -4,6 +4,7 @@
 ##' @name PrescRiptions
 ##' @description aggregations and reports on Practice Level Prescription Data in England
 ##' @import utils
+##' @import kableExtra
 ##' @import data.table
 ##' @import stringr
 ##' @import readr

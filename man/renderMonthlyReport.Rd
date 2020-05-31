@@ -4,7 +4,7 @@
 \alias{renderMonthlyReport}
 \title{renderMonthlyReport}
 \usage{
-renderMonthlyReport(settings, monthData, ccg = NULL, gp = NULL, sample = "YES")
+renderMonthlyReport(settings, monthData, ccg = NULL, gp = NULL)
 }
 \arguments{
 \item{settings}{analysis settings generated with \emph{setConfig()}}
@@ -14,8 +14,6 @@ renderMonthlyReport(settings, monthData, ccg = NULL, gp = NULL, sample = "YES")
 \item{ccg}{In case a focus is neded for a specific CCG, the CCG to run the analysis and the report for.}
 
 \item{gp}{In case a focus is neded for a specific GP, the GP to run the analysis and the report for}
-
-\item{sample}{if sample data have been used, use this for making a message appearing in the report.}
 }
 \value{
 The function generates an html file.

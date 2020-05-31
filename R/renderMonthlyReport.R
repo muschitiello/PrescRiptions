@@ -6,7 +6,6 @@
 ##' @param monthData list with all data for month, as returded by \emph{monthlyData_import()}
 ##' @param ccg In case a focus is neded for a specific CCG, the CCG to run the analysis and the report for.
 ##' @param gp In case a focus is neded for a specific GP, the GP to run the analysis and the report for
-##' @param sample "YES" (default) or "NO". If sample data have been used, use this for making a message appearing in the report.
 ##' 
 ##' @return The function generates an html file.
 ##' @details The fucntion generate a monthly report composed of different sections: 
@@ -20,7 +19,7 @@
 ##' @export
 ##' 
 
-renderMonthlyReport = function(settings,monthData,ccg=NULL,gp=NULL,sample="YES") {
+renderMonthlyReport = function(settings,monthData,ccg=NULL,gp=NULL) {
 
   dirs = dirsGen(settings)
   year = settings$year
@@ -69,8 +68,7 @@ renderMonthlyReport = function(settings,monthData,ccg=NULL,gp=NULL,sample="YES")
       outputFolder = folderOut,
       inputFolder = inFolder,
       monthData = monthData,
-      settings = settings,
-      sample = sample
+      settings = settings
     ),
     encoding = "UTF8",
     run_pandoc = TRUE,

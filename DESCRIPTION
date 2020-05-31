@@ -1,8 +1,8 @@
 Package: PrescRiptions
 Type: Package
 Title: aggregations and reports on Practice Level Prescription Data in England
-Version: 0.2.2
-Date: 29/05/2020
+Version: 0.2.3
+Date: 31/05/2020
 Authors@R: c(person("Cristina", "Muschitiello", role = "aut", email =
         "cristina.muschitiello@gmail.com"), person("Cristina", "Muschitiello",
         role = "cre", email = "cristina.muschitiello@gmail.com"))
@@ -11,7 +11,7 @@ Description: More about what it does (maybe more than one line)
 License: GPL
 Depends: R (>= 3.5.0)
 Imports: yaml, data.table, stringr, readr, RCurl, config, ggthemes, 
-          ggplot2, prettydoc, rmarkdown, scales, tidyverse, dplyr
+          ggplot2, prettydoc, rmarkdown, scales, tidyverse, dplyr, kableExtra
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0

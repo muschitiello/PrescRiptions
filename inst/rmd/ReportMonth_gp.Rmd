@@ -35,7 +35,6 @@ params:
   inputFolder: inputFolder
   monthData: monthData
   settings: settings
-  sample: sample
 header-includes:
 - \usepackage{makeidx}
 - \makeindex
@@ -144,6 +143,11 @@ mutate(NIC_RATE_Z_TYPE=ifelse(NIC_RATE_Z < -1, "Cost Below Average", ifelse(NIC_
 gpSum[PRACTICE==params$selgp,NIC_RATE_Z_TYPE:="Cost for selected GP"]
 
 Sys.setlocale("LC_TIME", "English")
+
+if(nrow(plpd)<=500000){
+  params$sample="YES"
+}
+
 if(params$sample=="YES"){
   dataSample = "SAMPLE PLPD DATA (500.000 ROWS)"
   m1Sample = "complete data"
