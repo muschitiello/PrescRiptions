@@ -1,7 +1,7 @@
 Package: PrescRiptions
 Type: Package
 Title: aggregations and reports on Practice Level Prescription Data in England
-Version: 0.2.4
+Version: 0.2.5
 Date: 05/06/2020
 Authors@R: c(person("Cristina", "Muschitiello", role = "aut", email =
         "cristina.muschitiello@gmail.com"), person("Cristina", "Muschitiello",

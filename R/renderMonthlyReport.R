@@ -52,6 +52,13 @@ renderMonthlyReport = function(settings,monthData,ccg=NULL,gp=NULL) {
                   "FF" = "ReportMonth.Rmd"
   )
   
+  postScr= switch (chooseInput,
+                   "TT" = "_ccg_gp",
+                   "TF" = "_ccg",
+                   "FT" = "_gp",
+                   "FF" = "_base"
+  )
+  
   rmarkdown::render(
     system.file("rmd",input=inputRmd,package = "PrescRiptions"), 
     output_format = "html_document",
@@ -72,7 +79,7 @@ renderMonthlyReport = function(settings,monthData,ccg=NULL,gp=NULL) {
     ),
     encoding = "UTF8",
     run_pandoc = TRUE,
-    output_file = paste0(outFolder,prefixName,"_Report.html")
+    output_file = paste0(outFolder,prefixName,"_Report",postScr,".html")
   )
   
 }

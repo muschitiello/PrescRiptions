@@ -143,17 +143,17 @@ gpSum[PRACTICE==params$selgp,NIC_RATE_Z_TYPE:="Cost for selected GP"]
 Sys.setlocale("LC_TIME", "English")
 
 if(nrow(plpd)<=500000){
-  params$sample="YES"
+  Psample="YES"
 }
 
-if(params$sample=="YES"){
+if(Psample=="YES"){
   dataSample = "SAMPLE PLPD DATA (500.000 ROWS)"
   m1Sample = "complete data"
-  m2Sample = "SAMPLE = FALSE"
+  m2Sample = "sample = FALSE"
 }else{
     dataSample = "TOTAL PLPD DATA"
   m1Sample = "sample data"
-  m2Sample = "SAMPLE = TRUE"
+  m2Sample = "sample = TRUE"
 }
 
 ```

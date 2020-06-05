@@ -109,11 +109,9 @@ monthlyData_import = function(settings,whichData = "all",sample){
           
         }
         if(grepl("PDPI|pdpi",j)){
-          if(sample){
-            assign(paste0("plpd_",prefix),data.table(read.csv(paste0(paste0(dirs$plpdRootDirSample,"/",sampleFolder),"/",j),stringsAsFactors = FALSE,nrows = 500000)))
-          }else{
-            assign(paste0("plpd_",prefix),data.table(read.csv(paste0(paste0(dirs$plpdRootDir,folder),"/",j),stringsAsFactors = FALSE)))
-          }     
+
+            assign(paste0("plpd_",prefix),data.table(read.csv(paste0(paste0(dirs$plpdRootDirSample,"/",sampleFolder),"/",j),stringsAsFactors = FALSE)))
+             
           
         }
         

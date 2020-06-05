@@ -144,17 +144,17 @@ gpCostlier = gpSum[NIC_RATE_Z >2,2:8]
 Sys.setlocale("LC_TIME", "English")
 
 if(nrow(plpd)<=500000){
-  params$sample="YES"
+  Psample="YES"
 }
 
-if(params$sample=="YES"){
+if(Psample=="YES"){
   dataSample = "SAMPLE PLPD DATA (500.000 ROWS)"
   m1Sample = "complete data"
-  m2Sample = "SAMPLE = 'YES'"
+  m2Sample = "sample = FALSE"
 }else{
     dataSample = "TOTAL PLPD DATA"
   m1Sample = "sample data"
-  m2Sample = "SAMPLE = 'NO'"
+  m2Sample = "sample = TRUE"
 }
 
 ```
