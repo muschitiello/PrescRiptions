@@ -11,7 +11,7 @@ setConfig(rootdir, year, month, region)
 
 \item{year}{numeric. Year of interest}
 
-\item{month}{numeric. Month of interest}
+\item{month}{numeric. Month of interest, one of 2018 and 2019}
 
 \item{region}{char. Region of analysis}
 }

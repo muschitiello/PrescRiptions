@@ -4,7 +4,7 @@
 ##'
 ##' @param rootdir path to an existing working directory
 ##' @param year numeric. Year of interest
-##' @param month numeric. Month of interest
+##' @param month numeric. Month of interest, one of 2018 and 2019
 ##' @param region char. Region of analysis
 ##' 
 ##' @return The function returns a list containing the following information, as relative to the month and year selected:
@@ -21,6 +21,10 @@
 ##' @export
 
 setConfig <- function(rootdir, year, month, region){
+  
+  if(!as.character(year)%in%c("2018","2019")){
+    stop(paste0("Only 2018 and 2019 implemented. Please select one of these years"))
+  }
   
   month=as.character(stringr::str_pad(month,width = 2,side = "left",pad = "0"))
   prefix = paste0(year,month)

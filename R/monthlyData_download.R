@@ -5,7 +5,9 @@
 ##' @param settings setting object created via \emph{setConfig()} function containing paths, month and year of analysis and file names.
 ##' @param whichData string indicatin which Data to download. One of "plpd", "bnf", "demog" and "all"
 ##' default = "all"
-##'
+##' @param sample logic. if TRUE (default) a sample file is downloaded from github Repository with only 500.000 rows.
+##'  When FALSE completa data are downloaded from website. 
+##' 
 ##' @details Verify if data have already been downloaded and, if not, download all data for one month analysis. 
 ##' Data are imported from the following sources:
 ##'  - plpd: website 
@@ -24,7 +26,12 @@
 ##'
 
 
-monthlyData_download = function(settings, whichData = "all"){
+monthlyData_download = function(settings, whichData = "all",sample){
+  
+  if(!exists("sample")){
+    message("sample argument not specified, SAMPLE DATA will be downloaded")
+    sample = TRUE
+  }
   
   dirs = dirsGen(settings)
   month=as.character(stringr::str_pad(settings$month,width = 2,side = "left",pad = "0"))
@@ -67,11 +74,12 @@ monthlyData_download = function(settings, whichData = "all"){
   }
   
   ##############################################################
-  #### plpd from source
+  #### plpd  source
   
   plpdurl = paste0("plpd",year,month)
   prefix = paste0(year,month)
   folder = paste0("plpd_",prefix)
+  sampleFolder = paste0("plpd_",prefix,"_SAMPLE")
   outF = "csv"
   
   url = switch(plpdurl,
@@ -101,62 +109,102 @@ monthlyData_download = function(settings, whichData = "all"){
                "plpd201911" = "https://files.digital.nhs.uk/66/972E65/2019_11_Nov.zip",
                "plpd201912" = "https://files.digital.nhs.uk/5A/CA6C2E/2019_12_Dec.zip"
   )
+  
   if(plpdTF){
     message(paste(folder))
-    # check if file already exists
-    # if not, create folder
-    if(dir.exists(paste0(dirs$plpdRootDir,folder)) & length(list.files(paste0(dirs$plpdRootDir,folder)))==3){
-      message(paste0("Files already exist"))
-    }else{
-      message("download")
-      
-      suppressWarnings(dir.create(paste0(dirs$plpdRootDir,folder),recursive = T))
-      
-      # create the temporary file
-      if(Sys.getenv("TEMP")!=""){
-        td=paste0(Sys.getenv("TEMP"),"\\PrescRtemp")
+    if(sample){
+      if(dir.exists(paste0(dirs$plpdRootDirSample,"/",sampleFolder)) & length(list.files(paste0(dirs$plpdRootDirSample,"/",sampleFolder)))==3){
+        message(paste0("SAMPLE Files already exist"))
       }else{
-        td=paste0(getwd(),"/PrescRtemp")
-      }
-      on.exit(unlink(td))
-      tf = tempfile(tmpdir = td,fileext = ".zip")
-      if(!dir.exists(td)){
-        dir.create(td)
-      }
-      utils::download.file(url = url, destfile = tf)
-      # unzip in temporary folder
-      unzip(zipfile = tf, exdir = paste0(dirs$plpdRootDir,folder))
-      
-      plpdFiles = list.files(paste0(dirs$plpdRootDir,folder))[which(
-        grepl("ADDR|CHEM|PDPI|addr|chem|pdpi",list.files(paste0(dirs$plpdRootDir,folder))))]
-      
-      # save file in the specified format
-      for(j in plpdFiles){
-        if(grepl("ADDR|addr",j)){
-          path = paste0(dirs$plpdRootDir,folder,"/","addr_",prefix,".",outF)
-          if(!file.rename(paste0(dirs$plpdRootDir,folder,"/",j),path)){"FALSE"}
+        message("download")
+        
+        suppressWarnings(dir.create(paste0(dirs$plpdRootDirSample,"/",sampleFolder),recursive = T))
+        # create the temporary file
+        if(Sys.getenv("TEMP")!=""){
+          td=paste0(Sys.getenv("TEMP"),"\\PrescRtemp")
+        }else{
+          td=paste0(getwd(),"/PrescRtemp")
         }
-        if(grepl("CHEM|chem",j)){
-          path = paste0(dirs$plpdRootDir,folder,"/","chem_",prefix,".",outF)
-          if(!file.rename(paste0(dirs$plpdRootDir,folder,"/",j),path)){"FALSE"}
+        on.exit(unlink(td))
+        tf = tempfile(tmpdir = td,fileext = ".zip")
+        if(!dir.exists(td)){
+          dir.create(td)
         }
-        if(grepl("PDPI|pdpi",j)){
-          path = paste0(dirs$plpdRootDir,folder,"/","pdpi_",prefix,".",outF)
-          if(!file.rename(paste0(dirs$plpdRootDir,folder,"/",j),path)){"FALSE"}
-        }
+        # define url from GH
+        
+        url = paste0(dirs$urlGH,dirs$gitPlpdZipDir,"/",sampleFolder,".zip")
+        
+        
+        # download zip
+        utils::download.file(url = url, destfile = tf)
+        # unzip in temporary folder
+        unzip(zipfile = tf, exdir = dirs$plpdRootDirSample)
+        
+        # rm tmp file
+        unlink(tf)
+        unlink(td,recursive = T)
+        
         
       }
       
-      # rm tmp file
-      unlink(tf)
-      unlink(td,recursive = T)
+    }else{
+      
+      
+      # check if file already exists
+      # if not, create folder
+      if(dir.exists(paste0(dirs$plpdRootDir,folder)) & length(list.files(paste0(dirs$plpdRootDir,folder)))==3){
+        message(paste0("Files already exist"))
+      }else{
+        message("download")
+        
+        suppressWarnings(dir.create(paste0(dirs$plpdRootDir,folder),recursive = T))
+        
+        # create the temporary file
+        if(Sys.getenv("TEMP")!=""){
+          td=paste0(Sys.getenv("TEMP"),"\\PrescRtemp")
+        }else{
+          td=paste0(getwd(),"/PrescRtemp")
+        }
+        on.exit(unlink(td))
+        tf = tempfile(tmpdir = td,fileext = ".zip")
+        if(!dir.exists(td)){
+          dir.create(td)
+        }
+        utils::download.file(url = url, destfile = tf)
+        # unzip in temporary folder
+        unzip(zipfile = tf, exdir = paste0(dirs$plpdRootDir,folder))
+        
+        plpdFiles = list.files(paste0(dirs$plpdRootDir,folder))[which(
+          grepl("ADDR|CHEM|PDPI|addr|chem|pdpi",list.files(paste0(dirs$plpdRootDir,folder))))]
+        
+        # save file in the specified format
+        for(j in plpdFiles){
+          if(grepl("ADDR|addr",j)){
+            path = paste0(dirs$plpdRootDir,folder,"/","addr_",prefix,".",outF)
+            if(!file.rename(paste0(dirs$plpdRootDir,folder,"/",j),path)){"FALSE"}
+          }
+          if(grepl("CHEM|chem",j)){
+            path = paste0(dirs$plpdRootDir,folder,"/","chem_",prefix,".",outF)
+            if(!file.rename(paste0(dirs$plpdRootDir,folder,"/",j),path)){"FALSE"}
+          }
+          if(grepl("PDPI|pdpi",j)){
+            path = paste0(dirs$plpdRootDir,folder,"/","pdpi_",prefix,".",outF)
+            if(!file.rename(paste0(dirs$plpdRootDir,folder,"/",j),path)){"FALSE"}
+          }
+          
+        }
+        
+        # rm tmp file
+        unlink(tf)
+        unlink(td,recursive = T)
+        
+      }
       
     }
-    
   }
   ##############################################################
   #### bnf, demog, qof from github
-
+  
   # chose year for bnf file
   bnffile = switch(as.character(year),
                    "2018" = "bnf_201901.csv",
@@ -202,7 +250,7 @@ monthlyData_download = function(settings, whichData = "all"){
     
     inFiles = inFiles[filesN]
     inFolderFinal = inFolderFinal[filesN]
-
+    
     # final download 
     for (i in 1:length(inFiles)){
       for (j in inFiles[[i]]){

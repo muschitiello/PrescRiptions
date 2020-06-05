@@ -4,13 +4,16 @@
 \alias{monthlyData_download}
 \title{monthlyData_download}
 \usage{
-monthlyData_download(settings, whichData = "all")
+monthlyData_download(settings, whichData = "all", sample)
 }
 \arguments{
 \item{settings}{setting object created via \emph{setConfig()} function containing paths, month and year of analysis and file names.}
 
 \item{whichData}{string indicatin which Data to download. One of "plpd", "bnf", "demog" and "all"
 default = "all"}
+
+\item{sample}{logic. if TRUE (default) a sample file is downloaded from github Repository with only 500.000 rows.
+When FALSE completa data are downloaded from website.}
 }
 \value{
 the function does not return anything but downloads data in the \emph{dataInput} folder and under the relative subfolder

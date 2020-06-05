@@ -4,7 +4,7 @@
 \alias{monthlyData_import}
 \title{monthlyData_import}
 \usage{
-monthlyData_import(settings, whichData = "all", sample = TRUE)
+monthlyData_import(settings, whichData = "all", sample)
 }
 \arguments{
 \item{settings}{analysis settings generated with \emph{setConfig()}}
@@ -12,8 +12,7 @@ monthlyData_import(settings, whichData = "all", sample = TRUE)
 \item{whichData}{string indicatin which Data to download. One of "plpd", "bnf", "demog" and "all"
 default = "all"}
 
-\item{sample}{logic. if TRUE (default) only 500.000 rows will be uploaded in the workspace. 
-Added for usage on Rstudio Cloud for teaching/presenting purposes}
+\item{sample}{logic. if TRUE (default) only 500.000 rows will be uploaded in the workspace.}
 }
 \value{
 the function returns all data upoaded in the workspace in list format
@@ -24,7 +23,7 @@ import plpd, bnf, demog and qof data in the workspace for the specified month an
 \details{
 Import all data for one month analysis in the workspace. If altready downloaded, data are retrived from the folder where they have been downloaded.
 If not already downloaded, data are downloaded from:
- - plpd: website 
+ - plpd: website if sample = FALSE, github if sample = TRUE (default)
  - bnf: github/csv
  - demog: github/csv
  - qof: github/csv

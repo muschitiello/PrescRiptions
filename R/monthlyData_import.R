@@ -6,11 +6,10 @@
 ##' @param whichData string indicatin which Data to download. One of "plpd", "bnf", "demog" and "all"
 ##' default = "all"
 ##' @param sample logic. if TRUE (default) only 500.000 rows will be uploaded in the workspace. 
-##' Added for usage on Rstudio Cloud for teaching/presenting purposes
 ##'
 ##' @details Import all data for one month analysis in the workspace. If altready downloaded, data are retrived from the folder where they have been downloaded.
 ##' If not already downloaded, data are downloaded from:
-##'  - plpd: website 
+##'  - plpd: website if sample = FALSE, github if sample = TRUE (default)
 ##'  - bnf: github/csv
 ##'  - demog: github/csv
 ##'  - qof: github/csv
@@ -24,7 +23,12 @@
 ##'
 
 
-monthlyData_import = function(settings,whichData = "all",sample=TRUE){
+monthlyData_import = function(settings,whichData = "all",sample){
+ 
+   if(!exists("sample")){
+    message("sample argument not specified, SAMPLE DATA will be downloaded")
+    sample = TRUE
+   }
   
   dirs = dirsGen(settings)
   
@@ -69,23 +73,59 @@ monthlyData_import = function(settings,whichData = "all",sample=TRUE){
   
   ##############################################################
   #### IMPORT PLPD
-  
   plpdurl = paste0("plpd",year,month)
   prefix = paste0(year,month)
   folder = paste0("plpd_",prefix)
+  sampleFolder = paste0("plpd_",prefix,"_SAMPLE")
+  
+  
+  
   
   #### If already exists on PC, import from there
   
   if(plpdTF){
     message(paste(folder))
-    # check if file already exists
-    # if not, create folder
-    if(!(dir.exists(paste0(dirs$plpdRootDir,folder)) & length(list.files(paste0(dirs$plpdRootDir,folder)))==3)){
-      message("download Data")
-      monthlyData_download(settings = settings,whichData = "plpd")
-    }
+    if(sample){
+      # check if file already exists
+      # if not, create folder
+      if(!(dir.exists(paste0(dirs$plpdRootDirSample,"/",sampleFolder)) & length(list.files(paste0(dirs$plpdRootDirSample,"/",sampleFolder)))==3)){
+        message("download Data")
+        monthlyData_download(settings = settings,whichData = "plpd",sample=TRUE)
+      }
       
-      message(paste0("File already downloaded. Import from rootDir"))
+      message(paste0("File downloaded. Import from rootDir"))
+      plpdFiles = list.files(paste0(dirs$plpdRootDirSample,"/",sampleFolder))[
+        which(grepl("ADDR|CHEM|PDPI|addr|chem|pdpi",list.files(paste0(dirs$plpdRootDirSample,"/",sampleFolder))))]
+      
+      for(j in plpdFiles){
+        message(j)
+        if(grepl("ADDR|addr",j)){
+          assign(paste0("addr_",prefix),data.table(read.csv(paste0(paste0(dirs$plpdRootDirSample,"/",sampleFolder),"/",j),stringsAsFactors = FALSE,header = FALSE)))
+          setnames(mget(paste0("addr_",prefix))[[1]],colnames(mget(paste0("addr_",prefix))[[1]]),c("PERIOD","Practice.Code","Practice.Name",
+                                                                                                   "Address.1","Address.2","Address.3","Address.4","Postcode"))
+        }
+        if(grepl("CHEM|chem",j)){
+          assign(paste0("chem_",prefix),data.table(read.csv(paste0(paste0(dirs$plpdRootDirSample,"/",sampleFolder),"/",j),stringsAsFactors = FALSE)))
+          
+        }
+        if(grepl("PDPI|pdpi",j)){
+          if(sample){
+            assign(paste0("plpd_",prefix),data.table(read.csv(paste0(paste0(dirs$plpdRootDirSample,"/",sampleFolder),"/",j),stringsAsFactors = FALSE,nrows = 500000)))
+          }else{
+            assign(paste0("plpd_",prefix),data.table(read.csv(paste0(paste0(dirs$plpdRootDir,folder),"/",j),stringsAsFactors = FALSE)))
+          }     
+          
+        }
+        
+      }
+      
+      
+    }else{
+      if(!(dir.exists(paste0(dirs$plpdRootDir,folder)) & length(list.files(paste0(dirs$plpdRootDir,folder)))==3)){
+        message("download Data")
+        monthlyData_download(settings = settings,whichData = "plpd",sample=FALSE)
+      }
+      
       plpdFiles = list.files(paste0(dirs$plpdRootDir,folder))[
         which(grepl("ADDR|CHEM|PDPI|addr|chem|pdpi",list.files(paste0(dirs$plpdRootDir,folder))))]
       
@@ -94,7 +134,7 @@ monthlyData_import = function(settings,whichData = "all",sample=TRUE){
         if(grepl("ADDR|addr",j)){
           assign(paste0("addr_",prefix),data.table(read.csv(paste0(paste0(dirs$plpdRootDir,folder),"/",j),stringsAsFactors = FALSE,header = FALSE)))
           setnames(mget(paste0("addr_",prefix))[[1]],colnames(mget(paste0("addr_",prefix))[[1]]),c("PERIOD","Practice.Code","Practice.Name",
-                   "Address.1","Address.2","Address.3","Address.4","Postcode"))
+                                                                                                   "Address.1","Address.2","Address.3","Address.4","Postcode"))
         }
         if(grepl("CHEM|chem",j)){
           assign(paste0("chem_",prefix),data.table(read.csv(paste0(paste0(dirs$plpdRootDir,folder),"/",j),stringsAsFactors = FALSE)))
@@ -106,13 +146,14 @@ monthlyData_import = function(settings,whichData = "all",sample=TRUE){
           }else{
             assign(paste0("plpd_",prefix),data.table(read.csv(paste0(paste0(dirs$plpdRootDir,folder),"/",j),stringsAsFactors = FALSE)))
           }     
-
+          
         }
         
       }
-      
+    }
     out = mget(c(paste0("plpd_",prefix),paste0("chem_",prefix),paste0("addr_",prefix)))
   }
+  
   ##############################################################
   #### bnf, demog, qof from github
   
@@ -181,6 +222,7 @@ monthlyData_import = function(settings,whichData = "all",sample=TRUE){
     for (i in 1:length(files)){
       
       for (j in files[[i]]){
+        message(j)
         nameF = sub(".csv","",j)
         if(grepl("demog|qof",j)){
           sepCsv = ";"
@@ -199,14 +241,14 @@ monthlyData_import = function(settings,whichData = "all",sample=TRUE){
   
   if(any(grepl("plpd",names(out)))){
     if("X" %in% colnames(out[which(grepl("plpd",names(out)))][[1]])){
-    suppressWarnings(out[which(grepl("plpd",names(out)))][[1]][,X:=NULL])
+      suppressWarnings(out[which(grepl("plpd",names(out)))][[1]][,X:=NULL])
     }
   }
   
   if(any(grepl("demogMap",names(out)))){
     out[which(grepl("demogMap",names(out)))][[1]]=checkDemogMap(out[which(grepl("demogMap",names(out)))][[1]],settings)
   }
-
+  
   return(out)
   
 }

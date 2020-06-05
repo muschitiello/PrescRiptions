@@ -14,10 +14,12 @@ dirsGen = function(settings){
   outputDir = paste0(rootdir,"/reports/")
   timeSeriesDir = paste0(rootdir,"/timeSeries/")
   plpdRootDir = paste0(inputdir,"01_plpd/")
+  plpdRootDirSample = paste0(inputdir,"01_plpd_SAMPLE")
   bnfRootDir = paste0(inputdir,"02_bnf/")
   demogRootDir = paste0(inputdir,"03_demog/")
   qofRootDir = paste0(inputdir,"04_qof/")
   gitHubCsvDir = c("02_bnf/csv","03_demog/csv","04_qof/csv")
+  gitPlpdZipDir = "01_plpd/01_plpd_SAMPLE"
   urlGH = "https://raw.githubusercontent.com/muschitiello/PrescRiptionsData/master/"
   
   out=list(
@@ -26,10 +28,12 @@ dirsGen = function(settings){
     outputDir = outputDir,
     timeSeriesDir = timeSeriesDir,
     plpdRootDir =plpdRootDir,
+    plpdRootDirSample = plpdRootDirSample,
     bnfRootDir = bnfRootDir,
     demogRootDir = demogRootDir,
     qofRootDir = qofRootDir,
     gitHubCsvDir = gitHubCsvDir,
+    gitPlpdZipDir = gitPlpdZipDir,
     urlGH = urlGH
   )
   
