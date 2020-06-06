@@ -24,7 +24,7 @@ Download plpd, bnf, demog and qof data in csv format and save them in the data d
 \details{
 Verify if data have already been downloaded and, if not, download all data for one month analysis. 
 Data are imported from the following sources:
- - plpd: website 
+ - plpd: github when sample=T /website when sample = F 
  - bnf: github/csv
  - demog: github/csv
  - qof: github/csv

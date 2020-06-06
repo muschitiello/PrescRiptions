@@ -10,7 +10,7 @@
 ##' 
 ##' @details Verify if data have already been downloaded and, if not, download all data for one month analysis. 
 ##' Data are imported from the following sources:
-##'  - plpd: website 
+##'  - plpd: github when sample=T /website when sample = F 
 ##'  - bnf: github/csv
 ##'  - demog: github/csv
 ##'  - qof: github/csv
